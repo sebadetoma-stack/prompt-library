@@ -301,6 +301,80 @@
             transform: scale(1.2);
         }
 
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .template-card {
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        .template-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .template-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .template-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .variable-input {
+            margin-bottom: 15px;
+        }
+
+        .variable-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .share-link-input {
+            flex: 1;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .keyboard-shortcut {
+            display: inline-block;
+            padding: 2px 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+            margin-left: 5px;
+        }
+
         .prompt-list {
             display: flex;
             flex-direction: column;
@@ -585,6 +659,7 @@
                     </div>
                     <div class="user-info" id="userInfo"></div>
                     <button class="btn-icon" id="themeToggle" title="Cambiar tema">🌓</button>
+                    <button class="btn btn-secondary" id="templatesBtn">📋 Plantillas</button>
                     <button class="btn btn-primary" id="addPromptBtn">+ Nuevo Prompt</button>
                     <button class="btn btn-secondary" id="logoutBtn">Salir</button>
                 </div>
@@ -592,7 +667,7 @@
 
             <div class="search-section">
                 <div class="search-bar">
-                    <input type="search" id="searchInput" placeholder="Buscar prompts...">
+                    <input type="search" id="searchInput" placeholder="Buscar prompts... (Ctrl+F)">
                     <button class="btn btn-secondary" id="exportBtn" title="Exportar todos los prompts">📥 Exportar</button>
                     <button class="btn btn-secondary" id="importBtn" title="Importar prompts">📤 Importar</button>
                     <input type="file" id="importFile" accept=".json" style="display: none;">
@@ -660,6 +735,53 @@
 
     <div id="toast" class="toast"></div>
 
+    <!-- Modal de plantillas -->
+    <div id="templatesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Plantillas Predefinidas</h2>
+                <button class="close-btn" id="closeTemplates">&times;</button>
+            </div>
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates se cargan aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de variables -->
+    <div id="variablesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Completar Variables</h2>
+                <button class="close-btn" id="closeVariables">&times;</button>
+            </div>
+            <form id="variablesForm">
+                <div id="variablesContainer">
+                    <!-- Variables se cargan aquí -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelVariables">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Copiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de compartir -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Compartir Prompt</h2>
+                <button class="close-btn" id="closeShare">&times;</button>
+            </div>
+            <p>Este link permite que otros vean (pero no editen) este prompt:</p>
+            <div class="share-link-container">
+                <input type="text" class="share-link-input" id="shareLink" readonly>
+                <button class="btn btn-primary" id="copyShareLink">Copiar Link</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
@@ -713,9 +835,80 @@
         const importFile = document.getElementById('importFile');
         const categoryFilter = document.getElementById('categoryFilter');
         const charCounter = document.getElementById('charCounter');
+        const templatesBtn = document.getElementById('templatesBtn');
+        const templatesModal = document.getElementById('templatesModal');
+        const closeTemplates = document.getElementById('closeTemplates');
+        const templatesGrid = document.getElementById('templatesGrid');
+        const variablesModal = document.getElementById('variablesModal');
+        const closeVariables = document.getElementById('closeVariables');
+        const cancelVariables = document.getElementById('cancelVariables');
+        const variablesForm = document.getElementById('variablesForm');
+        const variablesContainer = document.getElementById('variablesContainer');
+        const shareModal = document.getElementById('shareModal');
+        const closeShare = document.getElementById('closeShare');
+        const shareLink = document.getElementById('shareLink');
+        const copyShareLink = document.getElementById('copyShareLink');
 
         // Initialize
         loadTheme();
+
+        // Plantillas predefinidas
+        const templates = [
+            {
+                id: 'resume',
+                icon: '📝',
+                title: 'Resumir',
+                description: 'Resumir texto en puntos clave',
+                content: 'Resumí el siguiente texto en {cantidad} puntos clave, manteniendo la información más importante:\n\n{texto}',
+                category: 'General',
+                tags: ['resumen', 'síntesis']
+            },
+            {
+                id: 'translate',
+                icon: '🌐',
+                title: 'Traducir',
+                description: 'Traducir texto a otro idioma',
+                content: 'Traducí el siguiente texto de {idioma_origen} a {idioma_destino}, manteniendo el tono y contexto:\n\n{texto}',
+                category: 'General',
+                tags: ['traducción', 'idiomas']
+            },
+            {
+                id: 'analyze',
+                icon: '🔍',
+                title: 'Analizar',
+                description: 'Análisis detallado de contenido',
+                content: 'Analizá el siguiente {tipo_contenido} y proporcioná:\n1. Principales argumentos\n2. Fortalezas y debilidades\n3. Conclusión\n\n{contenido}',
+                category: 'Análisis',
+                tags: ['análisis', 'crítica']
+            },
+            {
+                id: 'rewrite',
+                icon: '✏️',
+                title: 'Reescribir',
+                description: 'Reescribir en otro tono',
+                content: 'Reescribí el siguiente texto en tono {tono} (profesional/casual/formal/amigable):\n\n{texto}',
+                category: 'Redacción',
+                tags: ['reescritura', 'tono']
+            },
+            {
+                id: 'seo',
+                icon: '🎯',
+                title: 'SEO',
+                description: 'Optimizar para SEO',
+                content: 'Optimizá este título y descripción para SEO, usando la palabra clave "{keyword}":\n\nTítulo: {titulo}\nDescripción: {descripcion}',
+                category: 'SEO',
+                tags: ['seo', 'optimización']
+            },
+            {
+                id: 'interview',
+                icon: '🎤',
+                title: 'Notas de Entrevista',
+                description: 'Organizar notas de entrevista',
+                content: 'Organizá estas notas de entrevista en un artículo estructurado con:\n- Lead (primer párrafo enganchador)\n- Citas destacadas\n- Contexto\n\nNotas:\n{notas}',
+                category: 'Periodismo',
+                tags: ['entrevista', 'periodismo']
+            }
+        ];
 
         // Auth state observer
         onAuthStateChanged(auth, (user) => {
@@ -723,11 +916,38 @@
                 currentUser = user;
                 showApp();
                 loadPrompts();
+                checkSharedPrompt();
             } else {
                 currentUser = null;
                 showLogin();
             }
         });
+
+        function checkSharedPrompt() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const shared = urlParams.get('shared');
+            
+            if (shared) {
+                try {
+                    const promptData = JSON.parse(atob(shared));
+                    
+                    // Pre-cargar en el formulario
+                    document.getElementById('promptTitle').value = promptData.title;
+                    document.getElementById('promptContent').value = promptData.content;
+                    document.getElementById('promptCategory').value = promptData.category || '';
+                    document.getElementById('promptTags').value = promptData.tags?.join(', ') || '';
+                    charCounter.textContent = `${promptData.content.length} caracteres`;
+                    
+                    promptModal.classList.add('active');
+                    showToast('Prompt compartido cargado - podés guardarlo');
+                    
+                    // Limpiar URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } catch (error) {
+                    console.error('Error al cargar prompt compartido:', error);
+                }
+            }
+        }
 
         // Event listeners
         loginBtn.addEventListener('click', login);
@@ -749,6 +969,46 @@
         // Character counter
         document.getElementById('promptContent').addEventListener('input', (e) => {
             charCounter.textContent = `${e.target.value.length} caracteres`;
+        });
+
+        templatesBtn.addEventListener('click', openTemplatesModal);
+        closeTemplates.addEventListener('click', () => templatesModal.classList.remove('active'));
+        closeVariables.addEventListener('click', () => variablesModal.classList.remove('active'));
+        cancelVariables.addEventListener('click', () => variablesModal.classList.remove('active'));
+        closeShare.addEventListener('click', () => shareModal.classList.remove('active'));
+        copyShareLink.addEventListener('click', copyShareLinkFn);
+        variablesForm.addEventListener('submit', submitVariables);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + N: Nuevo prompt
+            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+                e.preventDefault();
+                if (appContainer.classList.contains('active')) {
+                    openAddModal();
+                }
+            }
+            // Ctrl/Cmd + F: Focus en búsqueda
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                if (appContainer.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            }
+            // Ctrl/Cmd + T: Plantillas
+            if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+                e.preventDefault();
+                if (appContainer.classList.contains('active')) {
+                    openTemplatesModal();
+                }
+            }
+            // Escape: Cerrar modales
+            if (e.key === 'Escape') {
+                closeModalFn();
+                templatesModal.classList.remove('active');
+                variablesModal.classList.remove('active');
+                shareModal.classList.remove('active');
+            }
         });
 
         document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -919,14 +1179,87 @@
 
         window.copyPrompt = async function(id) {
             const prompt = prompts.find(p => p.id === id);
+            
+            // Detectar variables en el contenido
+            const variables = extractVariables(prompt.content);
+            
+            if (variables.length > 0) {
+                // Mostrar modal de variables
+                openVariablesModal(prompt, variables);
+            } else {
+                // Copiar directo
+                try {
+                    await navigator.clipboard.writeText(prompt.content);
+                    
+                    setSyncStatus('syncing');
+                    await updateDoc(doc(db, 'prompts', id), {
+                        copyCount: (prompt.copyCount || 0) + 1
+                    });
+                    
+                    showToast('Copiado al portapapeles');
+                } catch (error) {
+                    console.error('Error al copiar:', error);
+                    showToast('Error al copiar');
+                }
+            }
+        }
+
+        function extractVariables(content) {
+            const regex = /\{([^}]+)\}/g;
+            const variables = [];
+            let match;
+            
+            while ((match = regex.exec(content)) !== null) {
+                const varName = match[1].trim();
+                if (!variables.includes(varName)) {
+                    variables.push(varName);
+                }
+            }
+            
+            return variables;
+        }
+
+        let currentPromptToCopy = null;
+
+        function openVariablesModal(prompt, variables) {
+            currentPromptToCopy = prompt;
+            variablesContainer.innerHTML = variables.map(varName => `
+                <div class="variable-input">
+                    <label for="var-${varName}">${varName}:</label>
+                    <input type="text" id="var-${varName}" name="${varName}" required 
+                           placeholder="Ingresá el valor para ${varName}">
+                </div>
+            `).join('');
+            
+            variablesModal.classList.add('active');
+            
+            // Focus en el primer input
+            setTimeout(() => {
+                const firstInput = variablesContainer.querySelector('input');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        async function submitVariables(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            let content = currentPromptToCopy.content;
+            
+            // Reemplazar variables
+            for (const [key, value] of formData.entries()) {
+                content = content.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+            }
+            
             try {
-                await navigator.clipboard.writeText(prompt.content);
+                await navigator.clipboard.writeText(content);
                 
                 setSyncStatus('syncing');
-                await updateDoc(doc(db, 'prompts', id), {
-                    copyCount: (prompt.copyCount || 0) + 1
+                await updateDoc(doc(db, 'prompts', currentPromptToCopy.id), {
+                    copyCount: (currentPromptToCopy.copyCount || 0) + 1
                 });
                 
+                variablesModal.classList.remove('active');
                 showToast('Copiado al portapapeles');
             } catch (error) {
                 console.error('Error al copiar:', error);
@@ -969,6 +1302,51 @@
                 showToast('Error al actualizar');
                 setSyncStatus('error');
             }
+        }
+
+        window.sharePrompt = function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            const encoded = btoa(JSON.stringify({
+                title: prompt.title,
+                content: prompt.content,
+                tags: prompt.tags,
+                category: prompt.category
+            }));
+            
+            const url = `${window.location.origin}${window.location.pathname}?shared=${encoded}`;
+            shareLink.value = url;
+            shareModal.classList.add('active');
+        }
+
+        function copyShareLinkFn() {
+            shareLink.select();
+            document.execCommand('copy');
+            showToast('Link copiado');
+        }
+
+        function openTemplatesModal() {
+            templatesGrid.innerHTML = templates.map(template => `
+                <div class="template-card" onclick="useTemplate('${template.id}')">
+                    <div class="template-icon">${template.icon}</div>
+                    <div class="template-title">${template.title}</div>
+                    <div class="template-desc">${template.description}</div>
+                </div>
+            `).join('');
+            
+            templatesModal.classList.add('active');
+        }
+
+        window.useTemplate = function(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            
+            document.getElementById('promptTitle').value = template.title;
+            document.getElementById('promptContent').value = template.content;
+            document.getElementById('promptCategory').value = template.category;
+            document.getElementById('promptTags').value = template.tags.join(', ');
+            charCounter.textContent = `${template.content.length} caracteres`;
+            
+            templatesModal.classList.remove('active');
+            promptModal.classList.add('active');
         }
 
         function exportPrompts() {
@@ -1087,6 +1465,7 @@
                         </h3>
                         <div class="prompt-actions">
                             <button class="icon-btn" onclick="copyPrompt('${prompt.id}')" title="Copiar">📋</button>
+                            <button class="icon-btn" onclick="sharePrompt('${prompt.id}')" title="Compartir">🔗</button>
                             <button class="icon-btn" onclick="duplicatePrompt('${prompt.id}')" title="Duplicar">📑</button>
                             <button class="icon-btn" onclick="openEditModal('${prompt.id}')" title="Editar">✏️</button>
                             <button class="icon-btn" onclick="deletePrompt('${prompt.id}')" title="Eliminar">🗑️</button>

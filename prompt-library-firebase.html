@@ -1,0 +1,956 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#1a1a2e">
+    <title>Prompt Library</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #0066cc;
+            --accent-hover: #0052a3;
+            --border: #e0e0e0;
+            --success: #28a745;
+            --danger: #dc3545;
+            --tag-bg: #e3f2fd;
+            --tag-text: #1976d2;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #0f3460;
+            --text-primary: #e4e4e4;
+            --text-secondary: #b0b0b0;
+            --accent: #4a9eff;
+            --accent-hover: #6bb0ff;
+            --border: #2d3748;
+            --success: #48bb78;
+            --danger: #f56565;
+            --tag-bg: #2c5282;
+            --tag-text: #90cdf4;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .login-screen h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .login-screen p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+        }
+
+        .google-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3c4043;
+        }
+
+        .google-btn:hover {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Main App */
+        .app-container {
+            display: none;
+        }
+
+        .app-container.active {
+            display: block;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-icon {
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-secondary);
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], input[type="search"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 14px;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .prompt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .prompt-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .prompt-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .prompt-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .prompt-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent);
+        }
+
+        .prompt-content {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .prompt-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .prompt-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 2000;
+            display: none;
+        }
+
+        .toast.active {
+            display: block;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .sync-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sync-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .sync-indicator.syncing {
+            background: #ffc107;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                padding: 20px;
+            }
+
+            .filters {
+                gap: 8px;
+            }
+
+            .filter-btn {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+
+            .user-info span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <h1>📝 Prompt Library</h1>
+        <p>Guardá y sincronizá tus prompts en la nube</p>
+        <button id="loginBtn" class="google-btn">
+            <svg class="google-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Iniciar sesión con Google
+        </button>
+    </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Cargando...</p>
+    </div>
+
+    <!-- Main App -->
+    <div id="appContainer" class="app-container">
+        <div class="container">
+            <header>
+                <h1>📝 Prompt Library</h1>
+                <div class="header-actions">
+                    <div class="sync-status">
+                        <span class="sync-indicator" id="syncIndicator"></span>
+                        <span id="syncText">Sincronizado</span>
+                    </div>
+                    <div class="user-info" id="userInfo"></div>
+                    <button class="btn-icon" id="themeToggle" title="Cambiar tema">🌓</button>
+                    <button class="btn btn-primary" id="addPromptBtn">+ Nuevo Prompt</button>
+                    <button class="btn btn-secondary" id="logoutBtn">Salir</button>
+                </div>
+            </header>
+
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="search" id="searchInput" placeholder="Buscar prompts...">
+                </div>
+                <div class="filters">
+                    <button class="filter-btn active" data-sort="recent">Recientes</button>
+                    <button class="filter-btn" data-sort="used">Más usados</button>
+                    <button class="filter-btn" data-sort="alpha">A-Z</button>
+                </div>
+            </div>
+
+            <div id="promptList" class="prompt-list">
+                <!-- Prompts se cargan aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar prompt -->
+    <div id="promptModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Nuevo Prompt</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="promptForm">
+                <div class="form-group">
+                    <label for="promptTitle">Título</label>
+                    <input type="text" id="promptTitle" required placeholder="Ej: Reescribir notas de entrevista">
+                </div>
+                <div class="form-group">
+                    <label for="promptContent">Contenido del Prompt</label>
+                    <textarea id="promptContent" required placeholder="Escribe o pega tu prompt aquí..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="promptTags">Etiquetas (separadas por comas)</label>
+                    <input type="text" id="promptTags" placeholder="Ej: trabajo, SEO, entrevistas">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiaGYnn8p7BMbozXtNiMA7mjwoosJmdKo",
+            authDomain: "prompt-library-4eec1.firebaseapp.com",
+            projectId: "prompt-library-4eec1",
+            storageBucket: "prompt-library-4eec1.firebasestorage.app",
+            messagingSenderId: "20218429808",
+            appId: "1:20218429808:web:46f308788ed77cb61bcfb5"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Global state
+        let currentUser = null;
+        let prompts = [];
+        let currentSort = 'recent';
+        let editingId = null;
+        let unsubscribe = null;
+
+        // DOM elements
+        const loginScreen = document.getElementById('loginScreen');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const appContainer = document.getElementById('appContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const promptList = document.getElementById('promptList');
+        const promptModal = document.getElementById('promptModal');
+        const promptForm = document.getElementById('promptForm');
+        const searchInput = document.getElementById('searchInput');
+        const addPromptBtn = document.getElementById('addPromptBtn');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const toast = document.getElementById('toast');
+        const userInfo = document.getElementById('userInfo');
+        const syncIndicator = document.getElementById('syncIndicator');
+        const syncText = document.getElementById('syncText');
+
+        // Initialize
+        loadTheme();
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                showApp();
+                loadPrompts();
+            } else {
+                currentUser = null;
+                showLogin();
+            }
+        });
+
+        // Event listeners
+        loginBtn.addEventListener('click', login);
+        logoutBtn.addEventListener('click', logout);
+        addPromptBtn.addEventListener('click', openAddModal);
+        closeModal.addEventListener('click', closeModalFn);
+        cancelBtn.addEventListener('click', closeModalFn);
+        promptForm.addEventListener('submit', savePrompt);
+        searchInput.addEventListener('input', filterPrompts);
+        themeToggle.addEventListener('click', toggleTheme);
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentSort = this.dataset.sort;
+                renderPrompts();
+            });
+        });
+
+        // Functions
+        async function login() {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error('Error al iniciar sesión:', error);
+                showToast('Error al iniciar sesión');
+            }
+        }
+
+        async function logout() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        }
+
+        function showLogin() {
+            loginScreen.style.display = 'flex';
+            loadingScreen.style.display = 'none';
+            appContainer.classList.remove('active');
+            if (unsubscribe) unsubscribe();
+        }
+
+        function showApp() {
+            loginScreen.style.display = 'none';
+            loadingScreen.style.display = 'none';
+            appContainer.classList.add('active');
+            
+            userInfo.innerHTML = `
+                <img src="${currentUser.photoURL}" alt="${currentUser.displayName}" class="user-avatar">
+                <span>${currentUser.displayName}</span>
+            `;
+        }
+
+        function loadPrompts() {
+            const q = query(
+                collection(db, 'prompts'),
+                where('userId', '==', currentUser.uid),
+                orderBy('updatedAt', 'desc')
+            );
+
+            setSyncStatus('syncing');
+            
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                prompts = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                renderPrompts();
+                setSyncStatus('synced');
+            }, (error) => {
+                console.error('Error al cargar prompts:', error);
+                setSyncStatus('error');
+            });
+        }
+
+        function setSyncStatus(status) {
+            if (status === 'syncing') {
+                syncIndicator.classList.add('syncing');
+                syncText.textContent = 'Sincronizando...';
+            } else if (status === 'synced') {
+                syncIndicator.classList.remove('syncing');
+                syncText.textContent = 'Sincronizado';
+            } else if (status === 'error') {
+                syncIndicator.classList.remove('syncing');
+                syncText.textContent = 'Error';
+            }
+        }
+
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Nuevo Prompt';
+            promptForm.reset();
+            promptModal.classList.add('active');
+        }
+
+        window.openEditModal = function(id) {
+            editingId = id;
+            const prompt = prompts.find(p => p.id === id);
+            document.getElementById('modalTitle').textContent = 'Editar Prompt';
+            document.getElementById('promptTitle').value = prompt.title;
+            document.getElementById('promptContent').value = prompt.content;
+            document.getElementById('promptTags').value = prompt.tags.join(', ');
+            promptModal.classList.add('active');
+        }
+
+        function closeModalFn() {
+            promptModal.classList.remove('active');
+            promptForm.reset();
+            editingId = null;
+        }
+
+        async function savePrompt(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('promptTitle').value.trim();
+            const content = document.getElementById('promptContent').value.trim();
+            const tagsInput = document.getElementById('promptTags').value.trim();
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+
+            setSyncStatus('syncing');
+
+            try {
+                if (editingId) {
+                    await updateDoc(doc(db, 'prompts', editingId), {
+                        title,
+                        content,
+                        tags,
+                        updatedAt: serverTimestamp()
+                    });
+                    showToast('Prompt actualizado');
+                } else {
+                    await addDoc(collection(db, 'prompts'), {
+                        userId: currentUser.uid,
+                        title,
+                        content,
+                        tags,
+                        copyCount: 0,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                    showToast('Prompt guardado');
+                }
+                closeModalFn();
+            } catch (error) {
+                console.error('Error al guardar:', error);
+                showToast('Error al guardar');
+                setSyncStatus('error');
+            }
+        }
+
+        window.deletePrompt = async function(id) {
+            if (confirm('¿Seguro que querés eliminar este prompt?')) {
+                setSyncStatus('syncing');
+                try {
+                    await deleteDoc(doc(db, 'prompts', id));
+                    showToast('Prompt eliminado');
+                } catch (error) {
+                    console.error('Error al eliminar:', error);
+                    showToast('Error al eliminar');
+                    setSyncStatus('error');
+                }
+            }
+        }
+
+        window.copyPrompt = async function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            try {
+                await navigator.clipboard.writeText(prompt.content);
+                
+                setSyncStatus('syncing');
+                await updateDoc(doc(db, 'prompts', id), {
+                    copyCount: (prompt.copyCount || 0) + 1
+                });
+                
+                showToast('Copiado al portapapeles');
+            } catch (error) {
+                console.error('Error al copiar:', error);
+                showToast('Error al copiar');
+            }
+        }
+
+        function renderPrompts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filtered = prompts.filter(p => 
+                p.title.toLowerCase().includes(searchTerm) ||
+                p.content.toLowerCase().includes(searchTerm) ||
+                (p.tags && p.tags.some(t => t.toLowerCase().includes(searchTerm)))
+            );
+
+            // Sort
+            if (currentSort === 'recent') {
+                filtered.sort((a, b) => {
+                    const aTime = a.updatedAt?.seconds || 0;
+                    const bTime = b.updatedAt?.seconds || 0;
+                    return bTime - aTime;
+                });
+            } else if (currentSort === 'used') {
+                filtered.sort((a, b) => (b.copyCount || 0) - (a.copyCount || 0));
+            } else if (currentSort === 'alpha') {
+                filtered.sort((a, b) => a.title.localeCompare(b.title));
+            }
+
+            if (filtered.length === 0) {
+                promptList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No hay prompts ${searchTerm ? 'que coincidan con tu búsqueda' : 'guardados'}</h3>
+                        <p>${searchTerm ? 'Intenta con otra búsqueda' : 'Crea tu primer prompt para empezar'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            promptList.innerHTML = filtered.map(prompt => `
+                <div class="prompt-card">
+                    <div class="prompt-header">
+                        <h3 class="prompt-title">${escapeHtml(prompt.title)}</h3>
+                        <div class="prompt-actions">
+                            <button class="icon-btn" onclick="copyPrompt('${prompt.id}')" title="Copiar">📋</button>
+                            <button class="icon-btn" onclick="openEditModal('${prompt.id}')" title="Editar">✏️</button>
+                            <button class="icon-btn" onclick="deletePrompt('${prompt.id}')" title="Eliminar">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="prompt-content">${escapeHtml(prompt.content)}</div>
+                    ${prompt.tags && prompt.tags.length > 0 ? `
+                        <div class="prompt-tags">
+                            ${prompt.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="prompt-meta">
+                        <span>Copiado ${prompt.copyCount || 0} ${(prompt.copyCount || 0) === 1 ? 'vez' : 'veces'}</span>
+                        <span>${formatDate(prompt.updatedAt)}</span>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterPrompts() {
+            renderPrompts();
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 2000);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp || !timestamp.seconds) return 'Recién';
+            
+            const date = new Date(timestamp.seconds * 1000);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Hoy';
+            if (days === 1) return 'Ayer';
+            if (days < 7) return `Hace ${days} días`;
+            
+            return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // Close modal on outside click
+        promptModal.addEventListener('click', function(e) {
+            if (e.target === promptModal) {
+                closeModalFn();
+            }
+        });
+    </script>
+</body>
+</html>

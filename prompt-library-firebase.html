@@ -243,6 +243,14 @@
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
         }
 
         .filter-btn {
@@ -260,6 +268,37 @@
             background: var(--accent);
             color: white;
             border-color: var(--accent);
+        }
+
+        .category-filter {
+            position: relative;
+        }
+
+        select {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .favorite-star {
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .favorite-star:hover {
+            transform: scale(1.2);
         }
 
         .prompt-list {
@@ -554,11 +593,22 @@
             <div class="search-section">
                 <div class="search-bar">
                     <input type="search" id="searchInput" placeholder="Buscar prompts...">
+                    <button class="btn btn-secondary" id="exportBtn" title="Exportar todos los prompts">📥 Exportar</button>
+                    <button class="btn btn-secondary" id="importBtn" title="Importar prompts">📤 Importar</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
                 </div>
-                <div class="filters">
-                    <button class="filter-btn active" data-sort="recent">Recientes</button>
-                    <button class="filter-btn" data-sort="used">Más usados</button>
-                    <button class="filter-btn" data-sort="alpha">A-Z</button>
+                <div class="filter-section">
+                    <div class="filters">
+                        <button class="filter-btn active" data-sort="recent">Recientes</button>
+                        <button class="filter-btn" data-sort="used">Más usados</button>
+                        <button class="filter-btn" data-sort="alpha">A-Z</button>
+                        <button class="filter-btn" data-sort="favorites">⭐ Favoritos</button>
+                    </div>
+                    <div class="category-filter">
+                        <select id="categoryFilter">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
                 </div>
             </div>
 
@@ -583,10 +633,22 @@
                 <div class="form-group">
                     <label for="promptContent">Contenido del Prompt</label>
                     <textarea id="promptContent" required placeholder="Escribe o pega tu prompt aquí..."></textarea>
+                    <div class="char-counter" id="charCounter">0 caracteres</div>
+                </div>
+                <div class="form-group">
+                    <label for="promptCategory">Categoría</label>
+                    <input type="text" id="promptCategory" placeholder="Ej: Trabajo, Personal, SEO" list="categoryList">
+                    <datalist id="categoryList"></datalist>
                 </div>
                 <div class="form-group">
                     <label for="promptTags">Etiquetas (separadas por comas)</label>
                     <input type="text" id="promptTags" placeholder="Ej: trabajo, SEO, entrevistas">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="promptFavorite">
+                        Marcar como favorito ⭐
+                    </label>
                 </div>
                 <div class="form-actions">
                     <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
@@ -624,6 +686,7 @@
         let currentUser = null;
         let prompts = [];
         let currentSort = 'recent';
+        let currentCategoryFilter = '';
         let editingId = null;
         let unsubscribe = null;
 
@@ -645,6 +708,11 @@
         const userInfo = document.getElementById('userInfo');
         const syncIndicator = document.getElementById('syncIndicator');
         const syncText = document.getElementById('syncText');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFile = document.getElementById('importFile');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const charCounter = document.getElementById('charCounter');
 
         // Initialize
         loadTheme();
@@ -670,6 +738,18 @@
         promptForm.addEventListener('submit', savePrompt);
         searchInput.addEventListener('input', filterPrompts);
         themeToggle.addEventListener('click', toggleTheme);
+        exportBtn.addEventListener('click', exportPrompts);
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', importPrompts);
+        categoryFilter.addEventListener('change', (e) => {
+            currentCategoryFilter = e.target.value;
+            renderPrompts();
+        });
+
+        // Character counter
+        document.getElementById('promptContent').addEventListener('input', (e) => {
+            charCounter.textContent = `${e.target.value.length} caracteres`;
+        });
 
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', function() {
@@ -764,13 +844,17 @@
             document.getElementById('modalTitle').textContent = 'Editar Prompt';
             document.getElementById('promptTitle').value = prompt.title;
             document.getElementById('promptContent').value = prompt.content;
+            document.getElementById('promptCategory').value = prompt.category || '';
             document.getElementById('promptTags').value = prompt.tags.join(', ');
+            document.getElementById('promptFavorite').checked = prompt.favorite || false;
+            charCounter.textContent = `${prompt.content.length} caracteres`;
             promptModal.classList.add('active');
         }
 
         function closeModalFn() {
             promptModal.classList.remove('active');
             promptForm.reset();
+            charCounter.textContent = '0 caracteres';
             editingId = null;
         }
 
@@ -779,8 +863,10 @@
             
             const title = document.getElementById('promptTitle').value.trim();
             const content = document.getElementById('promptContent').value.trim();
+            const category = document.getElementById('promptCategory').value.trim();
             const tagsInput = document.getElementById('promptTags').value.trim();
             const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+            const favorite = document.getElementById('promptFavorite').checked;
 
             setSyncStatus('syncing');
 
@@ -789,7 +875,9 @@
                     await updateDoc(doc(db, 'prompts', editingId), {
                         title,
                         content,
+                        category,
                         tags,
+                        favorite,
                         updatedAt: serverTimestamp()
                     });
                     showToast('Prompt actualizado');
@@ -798,7 +886,9 @@
                         userId: currentUser.uid,
                         title,
                         content,
+                        category,
                         tags,
+                        favorite: favorite || false,
                         copyCount: 0,
                         createdAt: serverTimestamp(),
                         updatedAt: serverTimestamp()
@@ -844,6 +934,96 @@
             }
         }
 
+        window.duplicatePrompt = async function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            setSyncStatus('syncing');
+            try {
+                await addDoc(collection(db, 'prompts'), {
+                    userId: currentUser.uid,
+                    title: `${prompt.title} (copia)`,
+                    content: prompt.content,
+                    category: prompt.category || '',
+                    tags: prompt.tags || [],
+                    favorite: false,
+                    copyCount: 0,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                showToast('Prompt duplicado');
+            } catch (error) {
+                console.error('Error al duplicar:', error);
+                showToast('Error al duplicar');
+                setSyncStatus('error');
+            }
+        }
+
+        window.toggleFavorite = async function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            setSyncStatus('syncing');
+            try {
+                await updateDoc(doc(db, 'prompts', id), {
+                    favorite: !prompt.favorite
+                });
+            } catch (error) {
+                console.error('Error al marcar favorito:', error);
+                showToast('Error al actualizar');
+                setSyncStatus('error');
+            }
+        }
+
+        function exportPrompts() {
+            const dataStr = JSON.stringify(prompts.map(p => ({
+                title: p.title,
+                content: p.content,
+                category: p.category,
+                tags: p.tags,
+                favorite: p.favorite,
+                copyCount: p.copyCount
+            })), null, 2);
+            
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `prompts-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('Prompts exportados');
+        }
+
+        async function importPrompts(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const importedPrompts = JSON.parse(text);
+                
+                setSyncStatus('syncing');
+                
+                for (const prompt of importedPrompts) {
+                    await addDoc(collection(db, 'prompts'), {
+                        userId: currentUser.uid,
+                        title: prompt.title,
+                        content: prompt.content,
+                        category: prompt.category || '',
+                        tags: prompt.tags || [],
+                        favorite: prompt.favorite || false,
+                        copyCount: 0,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                }
+                
+                showToast(`${importedPrompts.length} prompts importados`);
+                importFile.value = '';
+            } catch (error) {
+                console.error('Error al importar:', error);
+                showToast('Error al importar prompts');
+                setSyncStatus('error');
+            }
+        }
+
         function renderPrompts() {
             const searchTerm = searchInput.value.toLowerCase();
             let filtered = prompts.filter(p => 
@@ -851,6 +1031,16 @@
                 p.content.toLowerCase().includes(searchTerm) ||
                 (p.tags && p.tags.some(t => t.toLowerCase().includes(searchTerm)))
             );
+
+            // Filter by category
+            if (currentCategoryFilter) {
+                filtered = filtered.filter(p => p.category === currentCategoryFilter);
+            }
+
+            // Filter by favorites
+            if (currentSort === 'favorites') {
+                filtered = filtered.filter(p => p.favorite);
+            }
 
             // Sort
             if (currentSort === 'recent') {
@@ -863,14 +1053,23 @@
                 filtered.sort((a, b) => (b.copyCount || 0) - (a.copyCount || 0));
             } else if (currentSort === 'alpha') {
                 filtered.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (currentSort === 'favorites') {
+                filtered.sort((a, b) => {
+                    const aTime = a.updatedAt?.seconds || 0;
+                    const bTime = b.updatedAt?.seconds || 0;
+                    return bTime - aTime;
+                });
             }
+
+            // Update category filter
+            updateCategoryFilter();
 
             if (filtered.length === 0) {
                 promptList.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-state-icon">📭</div>
-                        <h3>No hay prompts ${searchTerm ? 'que coincidan con tu búsqueda' : 'guardados'}</h3>
-                        <p>${searchTerm ? 'Intenta con otra búsqueda' : 'Crea tu primer prompt para empezar'}</p>
+                        <h3>No hay prompts ${searchTerm ? 'que coincidan con tu búsqueda' : currentSort === 'favorites' ? 'marcados como favoritos' : 'guardados'}</h3>
+                        <p>${searchTerm ? 'Intenta con otra búsqueda' : currentSort === 'favorites' ? 'Marca algunos prompts como favoritos' : 'Crea tu primer prompt para empezar'}</p>
                     </div>
                 `;
                 return;
@@ -879,9 +1078,16 @@
             promptList.innerHTML = filtered.map(prompt => `
                 <div class="prompt-card">
                     <div class="prompt-header">
-                        <h3 class="prompt-title">${escapeHtml(prompt.title)}</h3>
+                        <h3 class="prompt-title">
+                            <span class="favorite-star" onclick="toggleFavorite('${prompt.id}')" title="${prompt.favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}">
+                                ${prompt.favorite ? '⭐' : '☆'}
+                            </span>
+                            ${escapeHtml(prompt.title)}
+                            ${prompt.category ? `<span class="tag">${escapeHtml(prompt.category)}</span>` : ''}
+                        </h3>
                         <div class="prompt-actions">
                             <button class="icon-btn" onclick="copyPrompt('${prompt.id}')" title="Copiar">📋</button>
+                            <button class="icon-btn" onclick="duplicatePrompt('${prompt.id}')" title="Duplicar">📑</button>
                             <button class="icon-btn" onclick="openEditModal('${prompt.id}')" title="Editar">✏️</button>
                             <button class="icon-btn" onclick="deletePrompt('${prompt.id}')" title="Eliminar">🗑️</button>
                         </div>
@@ -893,11 +1099,27 @@
                         </div>
                     ` : ''}
                     <div class="prompt-meta">
-                        <span>Copiado ${prompt.copyCount || 0} ${(prompt.copyCount || 0) === 1 ? 'vez' : 'veces'}</span>
+                        <span>Copiado ${prompt.copyCount || 0} ${(prompt.copyCount || 0) === 1 ? 'vez' : 'veces'} • ${prompt.content.length} caracteres</span>
                         <span>${formatDate(prompt.updatedAt)}</span>
                     </div>
                 </div>
             `).join('');
+        }
+
+        function updateCategoryFilter() {
+            const categories = [...new Set(prompts.map(p => p.category).filter(c => c))].sort();
+            const currentValue = categoryFilter.value;
+            
+            categoryFilter.innerHTML = '<option value="">Todas las categorías</option>' +
+                categories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+            
+            if (categories.includes(currentValue)) {
+                categoryFilter.value = currentValue;
+            }
+
+            // Update datalist for autocomplete
+            const datalist = document.getElementById('categoryList');
+            datalist.innerHTML = categories.map(cat => `<option value="${escapeHtml(cat)}">`).join('');
         }
 
         function filterPrompts() {

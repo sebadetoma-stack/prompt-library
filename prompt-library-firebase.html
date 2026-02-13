@@ -3,8 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#0066cc">
+    <meta name="theme-color" content="#1a1a2e">
     
+    <!-- Primary Meta Tags -->
+    <meta name="title" content="Prompt Library - Organizá tus prompts de IA">
+    <meta name="description" content="Guardá, organizá y sincronizá tus prompts de IA en la nube. Con variables dinámicas, plantillas predefinidas y sincronización automática.">
+
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sebadetoma-stack.github.io/prompt-library/">
@@ -18,9 +22,8 @@
     <meta property="twitter:title" content="Prompt Library - Organizá tus prompts de IA">
     <meta property="twitter:description" content="Guardá, organizá y sincronizá tus prompts de IA en la nube. Con variables dinámicas, plantillas predefinidas y sincronización automática.">
     <meta property="twitter:image" content="https://sebadetoma-stack.github.io/prompt-library/og-image.png">
-
-    <title>Prompt Library - Organizá tus prompts de IA</title>
     
+    <title>Prompt Library</title>
     <style>
         * {
             margin: 0;
@@ -28,326 +31,1928 @@
             box-sizing: border-box;
         }
 
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --bg-card: #ffffff;
+            --text-primary: #1a1a2e;
+            --text-secondary: #666;
+            --accent: #0066cc;
+            --accent-hover: #0052a3;
+            --border: #e0e0e0;
+            --success: #28a745;
+            --danger: #dc3545;
+            --tag-bg: #e3f2fd;
+            --tag-text: #1976d2;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a1a2e;
+            --bg-secondary: #16213e;
+            --bg-card: #0f3460;
+            --text-primary: #e4e4e4;
+            --text-secondary: #b0b0b0;
+            --accent: #4a9eff;
+            --accent-hover: #6bb0ff;
+            --border: #2d3748;
+            --success: #48bb78;
+            --danger: #f56565;
+            --tag-bg: #2c5282;
+            --tag-text: #90cdf4;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
             line-height: 1.6;
-            color: #1a1a2e;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            transition: background 0.3s, color 0.3s;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 0 auto;
             padding: 20px;
         }
 
-        header {
-            text-align: center;
-            padding: 60px 20px 40px;
-        }
-
-        .logo {
-            font-size: 64px;
-            margin-bottom: 20px;
-            animation: float 3s ease-in-out infinite;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px); }
-            50% { transform: translateY(-10px); }
-        }
-
-        h1 {
-            font-size: 48px;
-            color: white;
-            margin-bottom: 20px;
-            font-weight: 800;
-        }
-
-        .tagline {
-            font-size: 20px;
-            color: rgba(255, 255, 255, 0.9);
-            margin-bottom: 40px;
-        }
-
-        .cta-button {
-            display: inline-block;
-            background: white;
-            color: #667eea;
-            padding: 16px 48px;
-            border-radius: 50px;
-            font-size: 18px;
-            font-weight: 600;
-            text-decoration: none;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s;
-        }
-
-        .cta-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
-        }
-
-        .features {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin: 60px 0;
-        }
-
-        .feature-card {
-            background: white;
-            padding: 30px;
-            border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s;
-        }
-
-        .feature-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-        }
-
-        .feature-icon {
-            font-size: 48px;
-            margin-bottom: 20px;
-        }
-
-        .feature-title {
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 12px;
-            color: #1a1a2e;
-        }
-
-        .feature-desc {
-            color: #666;
-            line-height: 1.6;
-        }
-
-        .demo-section {
-            background: white;
-            border-radius: 20px;
-            padding: 50px;
-            margin: 60px 0;
-            text-align: center;
-        }
-
-        .demo-section h2 {
-            font-size: 36px;
-            margin-bottom: 30px;
-            color: #1a1a2e;
-        }
-
-        .demo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
-        }
-
-        .demo-item {
-            text-align: left;
-        }
-
-        .demo-label {
-            font-size: 14px;
-            color: #667eea;
-            font-weight: 600;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .demo-value {
-            font-size: 18px;
-            color: #1a1a2e;
-            font-weight: 600;
-        }
-
-        .stats {
+        /* Login Screen */
+        .login-screen {
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            gap: 60px;
-            margin: 60px 0;
-            flex-wrap: wrap;
-        }
-
-        .stat-item {
+            min-height: 100vh;
             text-align: center;
         }
 
-        .stat-number {
-            font-size: 48px;
-            font-weight: 800;
-            color: white;
-            display: block;
+        .login-screen h1 {
+            font-size: 36px;
             margin-bottom: 10px;
         }
 
-        .stat-label {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
+        .login-screen p {
+            color: var(--text-secondary);
+            margin-bottom: 30px;
         }
 
-        footer {
-            text-align: center;
-            padding: 40px 20px;
-            color: rgba(255, 255, 255, 0.8);
+        .google-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 24px;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #3c4043;
+        }
+
+        .google-btn:hover {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+        }
+
+        .google-icon {
+            width: 20px;
+            height: 20px;
+        }
+
+        /* Loading Screen */
+        .loading-screen {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            margin-top: 20px;
+            color: var(--text-secondary);
+        }
+
+        /* Main App */
+        .app-container {
+            display: none;
+        }
+
+        .app-container.active {
+            display: block;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--border);
+        }
+
+        h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--accent-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-icon {
+            padding: 10px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 18px;
+        }
+
+        .btn-icon:hover {
+            background: var(--bg-secondary);
+        }
+
+        .search-section {
+            margin-bottom: 20px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        input[type="text"], input[type="search"], textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--bg-card);
+            color: var(--text-primary);
             font-size: 14px;
         }
 
-        .footer-links {
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-section {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .category-filter {
+            position: relative;
+        }
+
+        select {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .char-counter {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-align: right;
+            margin-top: 5px;
+        }
+
+        .favorite-star {
+            cursor: pointer;
+            font-size: 20px;
+            transition: all 0.2s;
+        }
+
+        .favorite-star:hover {
+            transform: scale(1.2);
+        }
+
+        .templates-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
             margin-top: 20px;
         }
 
-        .footer-links a {
+        .template-card {
+            padding: 20px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: var(--accent);
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
+        .template-icon {
+            font-size: 32px;
+            margin-bottom: 10px;
+        }
+
+        .template-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .template-desc {
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .variable-input {
+            margin-bottom: 15px;
+        }
+
+        .variable-input label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .share-link-container {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .share-link-input {
+            flex: 1;
+            padding: 10px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .keyboard-shortcut {
+            display: inline-block;
+            padding: 2px 6px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 11px;
+            font-family: monospace;
+            margin-left: 5px;
+        }
+
+        .prompt-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .prompt-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+        }
+
+        .prompt-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .prompt-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .prompt-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            flex: 1;
+        }
+
+        .prompt-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            padding: 5px;
+            color: var(--text-secondary);
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: var(--accent);
+        }
+
+        .prompt-content {
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+        }
+
+        .prompt-tags {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+
+        .tag {
+            background: var(--tag-bg);
+            color: var(--tag-text);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .prompt-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 10px;
+            padding-top: 10px;
+            border-top: 1px solid var(--border);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 22px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: transparent;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 20px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--success);
             color: white;
-            text-decoration: none;
-            margin: 0 15px;
-            transition: opacity 0.3s;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-weight: 500;
+            z-index: 2000;
+            display: none;
         }
 
-        .footer-links a:hover {
-            opacity: 0.8;
+        .toast.active {
+            display: block;
+            animation: slideUp 0.3s ease;
         }
 
-        @media (max-width: 768px) {
+        @keyframes slideUp {
+            from {
+                transform: translateX(-50%) translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .sync-status {
+            font-size: 12px;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .sync-indicator {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+
+        .sync-indicator.syncing {
+            background: #ffc107;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+
             h1 {
-                font-size: 36px;
+                font-size: 20px;
             }
 
-            .tagline {
-                font-size: 18px;
+            header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
             }
 
-            .demo-section {
-                padding: 30px 20px;
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: space-between;
             }
 
-            .features {
-                grid-template-columns: 1fr;
+            .modal-content {
+                padding: 20px;
+                width: 95%;
             }
 
-            .stats {
-                gap: 30px;
+            .filters, .filter-section {
+                gap: 8px;
             }
 
-            .stat-number {
-                font-size: 36px;
+            .filter-btn {
+                font-size: 11px;
+                padding: 6px 12px;
             }
+
+            .user-info span {
+                display: none;
+            }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                font-size: 13px;
+                padding: 8px 16px;
+            }
+
+            .prompt-card {
+                padding: 15px;
+            }
+
+            .prompt-title {
+                font-size: 16px;
+            }
+
+            .prompt-actions {
+                flex-wrap: wrap;
+            }
+
+            .icon-btn {
+                font-size: 16px;
+            }
+
+            .templates-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .template-card {
+                padding: 15px;
+            }
+
+            .template-icon {
+                font-size: 24px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .view-toggle button {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .prompt-list.compact .prompt-card {
+            padding: 12px 15px;
+            cursor: pointer;
+        }
+
+        .prompt-list.compact .prompt-card:not(.expanded) .prompt-content {
+            display: none;
+        }
+
+        .prompt-list.compact .prompt-card:not(.expanded) .prompt-tags {
+            margin-bottom: 0;
+        }
+
+        .prompt-list.compact .prompt-card.expanded {
+            background: var(--bg-secondary);
+        }
+
+        .dashboard {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+            line-height: 1.2;
+            word-break: break-word;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .recent-prompts {
+            margin-top: 15px;
+        }
+
+        .recent-prompts h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .recent-item {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .recent-item:hover {
+            background: var(--border);
+            transform: translateX(5px);
+        }
+
+        .shortcuts-help {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .shortcuts-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .shortcuts-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .shortcuts-panel {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 99;
+            min-width: 250px;
+        }
+
+        .shortcuts-panel.active {
+            display: block;
+        }
+
+        .shortcuts-panel h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .shortcut-key {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 11px;
+            border: 1px solid var(--border);
+        }
+
+        .highlight {
+            background: yellow;
+            color: black;
+            padding: 2px 4px;
+            border-radius: 2px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <header>
-            <div class="logo">📝</div>
-            <h1>Prompt Library</h1>
-            <p class="tagline">Guardá, organizá y sincronizá tus prompts de IA en la nube</p>
-            <a href="prompt-library-firebase.html" class="cta-button">Comenzar Gratis</a>
-        </header>
-
-        <div class="features">
-            <div class="feature-card">
-                <div class="feature-icon">☁️</div>
-                <h3 class="feature-title">Sincronización automática</h3>
-                <p class="feature-desc">Accedé a tus prompts desde cualquier dispositivo. Todo se sincroniza en tiempo real con Firebase.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔧</div>
-                <h3 class="feature-title">Variables dinámicas</h3>
-                <p class="feature-desc">Creá prompts reutilizables con variables. Ejemplo: {texto}, {idioma}, {cantidad} - completás al usar.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">📋</div>
-                <h3 class="feature-title">Plantillas predefinidas</h3>
-                <p class="feature-desc">Empezá rápido con plantillas para resumir, traducir, analizar y más. O creá las tuyas.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🏷️</div>
-                <h3 class="feature-title">Organización inteligente</h3>
-                <p class="feature-desc">Categorías, etiquetas, favoritos, búsqueda avanzada. Encontrá lo que necesitás al instante.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">🔗</div>
-                <h3 class="feature-title">Compartir fácil</h3>
-                <p class="feature-desc">Compartí tus mejores prompts con un link. Otros pueden verlos y copiarlos a su biblioteca.</p>
-            </div>
-
-            <div class="feature-card">
-                <div class="feature-icon">📊</div>
-                <h3 class="feature-title">Estadísticas y métricas</h3>
-                <p class="feature-desc">Dashboard con tus prompts más usados, categorías, favoritos y actividad reciente.</p>
-            </div>
-        </div>
-
-        <div class="stats">
-            <div class="stat-item">
-                <span class="stat-number">⭐</span>
-                <span class="stat-label">100% Gratis</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">⚡</span>
-                <span class="stat-label">Sincronización instantánea</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">🔒</span>
-                <span class="stat-label">Tus datos privados</span>
-            </div>
-            <div class="stat-item">
-                <span class="stat-number">📱</span>
-                <span class="stat-label">Mobile-first</span>
-            </div>
-        </div>
-
-        <div class="demo-section">
-            <h2>Funcionalidades</h2>
-            <div class="demo-grid">
-                <div class="demo-item">
-                    <div class="demo-label">✅ Atajos de teclado</div>
-                    <div class="demo-value">Ctrl+B, Ctrl+P, Ctrl+F</div>
-                </div>
-                <div class="demo-item">
-                    <div class="demo-label">✅ Vista compacta</div>
-                    <div class="demo-value">Más prompts en pantalla</div>
-                </div>
-                <div class="demo-item">
-                    <div class="demo-label">✅ Exportar / Importar</div>
-                    <div class="demo-value">Backup en JSON</div>
-                </div>
-                <div class="demo-item">
-                    <div class="demo-label">✅ Duplicar prompts</div>
-                    <div class="demo-value">Copia y edita rápido</div>
-                </div>
-                <div class="demo-item">
-                    <div class="demo-label">✅ Modo oscuro</div>
-                    <div class="demo-value">Mejor para tus ojos</div>
-                </div>
-                <div class="demo-item">
-                    <div class="demo-label">✅ Contador caracteres</div>
-                    <div class="demo-value">Control de longitud</div>
-                </div>
-            </div>
-            
-            <div style="margin-top: 60px;">
-                <a href="prompt-library-firebase.html" class="cta-button">Probar ahora - Es gratis</a>
-            </div>
-        </div>
-
-        <footer>
-            <p>Diseñado por sebadetoma by claude, 2026</p>
-            <div class="footer-links">
-                <a href="https://github.com/sebadetoma-stack/prompt-library" target="_blank">GitHub</a>
-                <a href="https://github.com/sebadetoma-stack/prompt-library/blob/main/README.md" target="_blank">Documentación</a>
-                <a href="https://www.linkedin.com/in/juan-sebastian-de-toma/" target="_blank">LinkedIn</a>
-            </div>
-        </footer>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <h1>📝 Prompt Library</h1>
+        <p>Guardá y sincronizá tus prompts en la nube</p>
+        <button id="loginBtn" class="google-btn">
+            <svg class="google-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+            </svg>
+            Iniciar sesión con Google
+        </button>
     </div>
+
+    <!-- Loading Screen -->
+    <div id="loadingScreen" class="loading-screen" style="display: none;">
+        <div class="spinner"></div>
+        <p class="loading-text">Cargando...</p>
+    </div>
+
+    <!-- Main App -->
+    <div id="appContainer" class="app-container">
+        <div class="container">
+            <header>
+                <h1>📝 Prompt Library</h1>
+                <div class="header-actions">
+                    <div class="sync-status">
+                        <span class="sync-indicator" id="syncIndicator"></span>
+                        <span id="syncText">Sincronizado</span>
+                    </div>
+                    <div class="user-info" id="userInfo"></div>
+                    <button class="btn-icon" id="themeToggle" title="Cambiar tema">🌓</button>
+                    <button class="btn btn-secondary" id="templatesBtn">📋 Plantillas</button>
+                    <button class="btn btn-primary" id="addPromptBtn">+ Nuevo Prompt</button>
+                    <button class="btn btn-secondary" id="logoutBtn">Salir</button>
+                </div>
+            </header>
+
+            <div class="search-section">
+                <div class="search-bar">
+                    <input type="search" id="searchInput" placeholder="Buscar prompts... (Ctrl+F)">
+                    <button class="btn btn-secondary" id="exportBtn" title="Exportar todos los prompts">📥 Exportar</button>
+                    <button class="btn btn-secondary" id="importBtn" title="Importar prompts">📤 Importar</button>
+                    <input type="file" id="importFile" accept=".json" style="display: none;">
+                </div>
+                <div class="filter-section">
+                    <div class="filters">
+                        <button class="filter-btn active" data-sort="recent">Recientes</button>
+                        <button class="filter-btn" data-sort="used">Más usados</button>
+                        <button class="filter-btn" data-sort="alpha">A-Z</button>
+                        <button class="filter-btn" data-sort="favorites">⭐ Favoritos</button>
+                    </div>
+                    <div class="category-filter">
+                        <select id="categoryFilter">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
+                    <div class="view-toggle">
+                        <button class="active" data-view="normal">Normal</button>
+                        <button data-view="compact">Compacta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard" class="dashboard">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalPrompts">0</span>
+                        <span class="stat-label">Total Prompts</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalCategories">0</span>
+                        <span class="stat-label">Categorías</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalFavorites">0</span>
+                        <span class="stat-label">Favoritos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="mostUsed">-</span>
+                        <span class="stat-label">Más Usado</span>
+                    </div>
+                </div>
+                <div class="recent-prompts" id="recentPromptsSection" style="display: none;">
+                    <h3>📌 Usados recientemente</h3>
+                    <div id="recentPromptsList"></div>
+                </div>
+            </div>
+
+            <div id="promptList" class="prompt-list">
+                <!-- Prompts se cargan aquí -->
+            </div>
+
+            <div class="footer">
+                Diseñado por sebadetoma by claude, 2026
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts help -->
+    <div class="shortcuts-help" id="shortcutsHelp" style="display: none;">
+        <button class="shortcuts-btn" id="shortcutsBtn" title="Atajos de teclado">⌨️</button>
+        <div class="shortcuts-panel" id="shortcutsPanel">
+            <h3>⌨️ Atajos de Teclado</h3>
+            <div class="shortcut-item">
+                <span>Nuevo prompt</span>
+                <span class="shortcut-key">Ctrl+B</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Plantillas</span>
+                <span class="shortcut-key">Ctrl+P</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Buscar</span>
+                <span class="shortcut-key">Ctrl+F</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Cerrar modal</span>
+                <span class="shortcut-key">Esc</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para agregar/editar prompt -->
+    <div id="promptModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Nuevo Prompt</h2>
+                <button class="close-btn" id="closeModal">&times;</button>
+            </div>
+            <form id="promptForm">
+                <div class="form-group">
+                    <label for="promptTitle">Título</label>
+                    <input type="text" id="promptTitle" required placeholder="Ej: Reescribir notas de entrevista">
+                </div>
+                <div class="form-group">
+                    <label for="promptContent">Contenido del Prompt</label>
+                    <textarea id="promptContent" required placeholder="Escribe o pega tu prompt aquí..."></textarea>
+                    <div class="char-counter" id="charCounter">0 caracteres</div>
+                </div>
+                <div class="form-group">
+                    <label for="promptCategory">Categoría</label>
+                    <input type="text" id="promptCategory" placeholder="Ej: Trabajo, Personal, SEO" list="categoryList">
+                    <datalist id="categoryList"></datalist>
+                </div>
+                <div class="form-group">
+                    <label for="promptTags">Etiquetas (separadas por comas)</label>
+                    <input type="text" id="promptTags" placeholder="Ej: trabajo, SEO, entrevistas">
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="promptFavorite">
+                        Marcar como favorito ⭐
+                    </label>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+
+    <!-- Modal de plantillas -->
+    <div id="templatesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Plantillas Predefinidas</h2>
+                <button class="close-btn" id="closeTemplates">&times;</button>
+            </div>
+            <div class="templates-grid" id="templatesGrid">
+                <!-- Templates se cargan aquí -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de variables -->
+    <div id="variablesModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Completar Variables</h2>
+                <button class="close-btn" id="closeVariables">&times;</button>
+            </div>
+            <form id="variablesForm">
+                <div id="variablesContainer">
+                    <!-- Variables se cargan aquí -->
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelVariables">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Copiar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal de compartir -->
+    <div id="shareModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Compartir Prompt</h2>
+                <button class="close-btn" id="closeShare">&times;</button>
+            </div>
+            <p>Este link permite que otros vean (pero no editen) este prompt:</p>
+            <div class="share-link-container">
+                <input type="text" class="share-link-input" id="shareLink" readonly>
+                <button class="btn btn-primary" id="copyShareLink">Copiar Link</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, query, orderBy, onSnapshot, where, serverTimestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAiaGYnn8p7BMbozXtNiMA7mjwoosJmdKo",
+            authDomain: "prompt-library-4eec1.firebaseapp.com",
+            projectId: "prompt-library-4eec1",
+            storageBucket: "prompt-library-4eec1.firebasestorage.app",
+            messagingSenderId: "20218429808",
+            appId: "1:20218429808:web:46f308788ed77cb61bcfb5"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const provider = new GoogleAuthProvider();
+
+        // Global state
+        let currentUser = null;
+        let prompts = [];
+        let currentSort = 'recent';
+        let currentCategoryFilter = '';
+        let editingId = null;
+        let unsubscribe = null;
+
+        // DOM elements
+        const loginScreen = document.getElementById('loginScreen');
+        const loadingScreen = document.getElementById('loadingScreen');
+        const appContainer = document.getElementById('appContainer');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const promptList = document.getElementById('promptList');
+        const promptModal = document.getElementById('promptModal');
+        const promptForm = document.getElementById('promptForm');
+        const searchInput = document.getElementById('searchInput');
+        const addPromptBtn = document.getElementById('addPromptBtn');
+        const closeModal = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const themeToggle = document.getElementById('themeToggle');
+        const toast = document.getElementById('toast');
+        const userInfo = document.getElementById('userInfo');
+        const syncIndicator = document.getElementById('syncIndicator');
+        const syncText = document.getElementById('syncText');
+        const exportBtn = document.getElementById('exportBtn');
+        const importBtn = document.getElementById('importBtn');
+        const importFile = document.getElementById('importFile');
+        const categoryFilter = document.getElementById('categoryFilter');
+        const charCounter = document.getElementById('charCounter');
+        const templatesBtn = document.getElementById('templatesBtn');
+        const templatesModal = document.getElementById('templatesModal');
+        const closeTemplates = document.getElementById('closeTemplates');
+        const templatesGrid = document.getElementById('templatesGrid');
+        const variablesModal = document.getElementById('variablesModal');
+        const closeVariables = document.getElementById('closeVariables');
+        const cancelVariables = document.getElementById('cancelVariables');
+        const variablesForm = document.getElementById('variablesForm');
+        const variablesContainer = document.getElementById('variablesContainer');
+        const shareModal = document.getElementById('shareModal');
+        const closeShare = document.getElementById('closeShare');
+        const shareLink = document.getElementById('shareLink');
+        const copyShareLink = document.getElementById('copyShareLink');
+
+        // Initialize
+        loadTheme();
+
+        // Plantillas predefinidas
+        const templates = [
+            {
+                id: 'resume',
+                icon: '📝',
+                title: 'Resumir',
+                description: 'Resumir texto en puntos clave',
+                content: 'Resumí el siguiente texto en {cantidad} puntos clave, manteniendo la información más importante:\n\n{texto}',
+                category: 'General',
+                tags: ['resumen', 'síntesis']
+            },
+            {
+                id: 'translate',
+                icon: '🌐',
+                title: 'Traducir',
+                description: 'Traducir texto a otro idioma',
+                content: 'Traducí el siguiente texto de {idioma_origen} a {idioma_destino}, manteniendo el tono y contexto:\n\n{texto}',
+                category: 'General',
+                tags: ['traducción', 'idiomas']
+            },
+            {
+                id: 'analyze',
+                icon: '🔍',
+                title: 'Analizar',
+                description: 'Análisis detallado de contenido',
+                content: 'Analizá el siguiente {tipo_contenido} y proporcioná:\n1. Principales argumentos\n2. Fortalezas y debilidades\n3. Conclusión\n\n{contenido}',
+                category: 'Análisis',
+                tags: ['análisis', 'crítica']
+            },
+            {
+                id: 'rewrite',
+                icon: '✏️',
+                title: 'Reescribir',
+                description: 'Reescribir en otro tono',
+                content: 'Reescribí el siguiente texto en tono {tono} (profesional/casual/formal/amigable):\n\n{texto}',
+                category: 'Redacción',
+                tags: ['reescritura', 'tono']
+            },
+            {
+                id: 'seo',
+                icon: '🎯',
+                title: 'SEO',
+                description: 'Optimizar para SEO',
+                content: 'Optimizá este título y descripción para SEO, usando la palabra clave "{keyword}":\n\nTítulo: {titulo}\nDescripción: {descripcion}',
+                category: 'SEO',
+                tags: ['seo', 'optimización']
+            },
+            {
+                id: 'interview',
+                icon: '🎤',
+                title: 'Notas de Entrevista',
+                description: 'Organizar notas de entrevista',
+                content: 'Organizá estas notas de entrevista en un artículo estructurado con:\n- Lead (primer párrafo enganchador)\n- Citas destacadas\n- Contexto\n\nNotas:\n{notas}',
+                category: 'Periodismo',
+                tags: ['entrevista', 'periodismo']
+            }
+        ];
+
+        // Auth state observer
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                showApp();
+                loadPrompts();
+                checkSharedPrompt();
+            } else {
+                currentUser = null;
+                showLogin();
+            }
+        });
+
+        function checkSharedPrompt() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const shared = urlParams.get('shared');
+            
+            if (shared) {
+                try {
+                    const promptData = JSON.parse(atob(shared));
+                    
+                    // Pre-cargar en el formulario
+                    document.getElementById('promptTitle').value = promptData.title;
+                    document.getElementById('promptContent').value = promptData.content;
+                    document.getElementById('promptCategory').value = promptData.category || '';
+                    document.getElementById('promptTags').value = promptData.tags?.join(', ') || '';
+                    charCounter.textContent = `${promptData.content.length} caracteres`;
+                    
+                    promptModal.classList.add('active');
+                    showToast('Prompt compartido cargado - podés guardarlo');
+                    
+                    // Limpiar URL
+                    window.history.replaceState({}, document.title, window.location.pathname);
+                } catch (error) {
+                    console.error('Error al cargar prompt compartido:', error);
+                }
+            }
+        }
+
+        // Event listeners
+        loginBtn.addEventListener('click', login);
+        logoutBtn.addEventListener('click', logout);
+        addPromptBtn.addEventListener('click', openAddModal);
+        closeModal.addEventListener('click', closeModalFn);
+        cancelBtn.addEventListener('click', closeModalFn);
+        promptForm.addEventListener('submit', savePrompt);
+        searchInput.addEventListener('input', filterPrompts);
+        themeToggle.addEventListener('click', toggleTheme);
+        exportBtn.addEventListener('click', exportPrompts);
+        importBtn.addEventListener('click', () => importFile.click());
+        importFile.addEventListener('change', importPrompts);
+        categoryFilter.addEventListener('change', (e) => {
+            currentCategoryFilter = e.target.value;
+            renderPrompts();
+        });
+
+        // Character counter
+        document.getElementById('promptContent').addEventListener('input', (e) => {
+            charCounter.textContent = `${e.target.value.length} caracteres`;
+        });
+
+        templatesBtn.addEventListener('click', openTemplatesModal);
+        closeTemplates.addEventListener('click', () => templatesModal.classList.remove('active'));
+        closeVariables.addEventListener('click', () => variablesModal.classList.remove('active'));
+        cancelVariables.addEventListener('click', () => variablesModal.classList.remove('active'));
+        closeShare.addEventListener('click', () => shareModal.classList.remove('active'));
+        copyShareLink.addEventListener('click', copyShareLinkFn);
+        variablesForm.addEventListener('submit', submitVariables);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + B: Nuevo prompt
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
+                e.preventDefault();
+                if (appContainer.classList.contains('active')) {
+                    openAddModal();
+                }
+            }
+            // Ctrl/Cmd + F: Focus en búsqueda
+            if ((e.ctrlKey || e.metaKey) && e.key === 'f') {
+                e.preventDefault();
+                if (appContainer.classList.contains('active')) {
+                    searchInput.focus();
+                }
+            }
+            // Ctrl/Cmd + P: Plantillas
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
+                e.preventDefault();
+                if (appContainer.classList.contains('active')) {
+                    openTemplatesModal();
+                }
+            }
+            // Escape: Cerrar modales
+            if (e.key === 'Escape') {
+                closeModalFn();
+                templatesModal.classList.remove('active');
+                variablesModal.classList.remove('active');
+                shareModal.classList.remove('active');
+                document.getElementById('shortcutsPanel').classList.remove('active');
+            }
+        });
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentSort = this.dataset.sort;
+                renderPrompts();
+            });
+        });
+
+        // Functions
+        async function login() {
+            try {
+                await signInWithPopup(auth, provider);
+            } catch (error) {
+                console.error('Error al iniciar sesión:', error);
+                showToast('Error al iniciar sesión');
+            }
+        }
+
+        async function logout() {
+            try {
+                await signOut(auth);
+            } catch (error) {
+                console.error('Error al cerrar sesión:', error);
+            }
+        }
+
+        function showLogin() {
+            loginScreen.style.display = 'flex';
+            loadingScreen.style.display = 'none';
+            appContainer.classList.remove('active');
+            if (unsubscribe) unsubscribe();
+        }
+
+        function showApp() {
+            loginScreen.style.display = 'none';
+            loadingScreen.style.display = 'none';
+            appContainer.classList.add('active');
+            document.getElementById('shortcutsHelp').style.display = 'block';
+            
+            userInfo.innerHTML = `
+                <img src="${currentUser.photoURL}" alt="${currentUser.displayName}" class="user-avatar">
+                <span>${currentUser.displayName}</span>
+            `;
+
+            // Setup view toggle
+            document.querySelectorAll('.view-toggle button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.view === 'compact') {
+                        promptList.classList.add('compact');
+                    } else {
+                        promptList.classList.remove('compact');
+                    }
+                });
+            });
+
+            // Setup shortcuts button
+            document.getElementById('shortcutsBtn').addEventListener('click', () => {
+                document.getElementById('shortcutsPanel').classList.toggle('active');
+            });
+        }
+
+        function loadPrompts() {
+            const q = query(
+                collection(db, 'prompts'),
+                where('userId', '==', currentUser.uid),
+                orderBy('updatedAt', 'desc')
+            );
+
+            setSyncStatus('syncing');
+            
+            unsubscribe = onSnapshot(q, (snapshot) => {
+                prompts = snapshot.docs.map(doc => ({
+                    id: doc.id,
+                    ...doc.data()
+                }));
+                renderPrompts();
+                setSyncStatus('synced');
+            }, (error) => {
+                console.error('Error al cargar prompts:', error);
+                setSyncStatus('error');
+            });
+        }
+
+        function setSyncStatus(status) {
+            if (status === 'syncing') {
+                syncIndicator.classList.add('syncing');
+                syncText.textContent = 'Sincronizando...';
+            } else if (status === 'synced') {
+                syncIndicator.classList.remove('syncing');
+                syncText.textContent = 'Sincronizado';
+            } else if (status === 'error') {
+                syncIndicator.classList.remove('syncing');
+                syncText.textContent = 'Error';
+            }
+        }
+
+        function openAddModal() {
+            editingId = null;
+            document.getElementById('modalTitle').textContent = 'Nuevo Prompt';
+            promptForm.reset();
+            promptModal.classList.add('active');
+        }
+
+        window.openEditModal = function(id) {
+            editingId = id;
+            const prompt = prompts.find(p => p.id === id);
+            document.getElementById('modalTitle').textContent = 'Editar Prompt';
+            document.getElementById('promptTitle').value = prompt.title;
+            document.getElementById('promptContent').value = prompt.content;
+            document.getElementById('promptCategory').value = prompt.category || '';
+            document.getElementById('promptTags').value = prompt.tags.join(', ');
+            document.getElementById('promptFavorite').checked = prompt.favorite || false;
+            charCounter.textContent = `${prompt.content.length} caracteres`;
+            promptModal.classList.add('active');
+        }
+
+        function closeModalFn() {
+            promptModal.classList.remove('active');
+            promptForm.reset();
+            charCounter.textContent = '0 caracteres';
+            editingId = null;
+        }
+
+        async function savePrompt(e) {
+            e.preventDefault();
+            
+            const title = document.getElementById('promptTitle').value.trim();
+            const content = document.getElementById('promptContent').value.trim();
+            const category = document.getElementById('promptCategory').value.trim();
+            const tagsInput = document.getElementById('promptTags').value.trim();
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+            const favorite = document.getElementById('promptFavorite').checked;
+
+            setSyncStatus('syncing');
+
+            try {
+                if (editingId) {
+                    await updateDoc(doc(db, 'prompts', editingId), {
+                        title,
+                        content,
+                        category,
+                        tags,
+                        favorite,
+                        updatedAt: serverTimestamp()
+                    });
+                    showToast('Prompt actualizado');
+                } else {
+                    await addDoc(collection(db, 'prompts'), {
+                        userId: currentUser.uid,
+                        title,
+                        content,
+                        category,
+                        tags,
+                        favorite: favorite || false,
+                        copyCount: 0,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                    showToast('Prompt guardado');
+                }
+                closeModalFn();
+            } catch (error) {
+                console.error('Error al guardar:', error);
+                showToast('Error al guardar');
+                setSyncStatus('error');
+            }
+        }
+
+        window.deletePrompt = async function(id) {
+            if (confirm('¿Seguro que querés eliminar este prompt?')) {
+                setSyncStatus('syncing');
+                try {
+                    await deleteDoc(doc(db, 'prompts', id));
+                    showToast('Prompt eliminado');
+                } catch (error) {
+                    console.error('Error al eliminar:', error);
+                    showToast('Error al eliminar');
+                    setSyncStatus('error');
+                }
+            }
+        }
+
+        window.copyPrompt = async function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            
+            // Detectar variables en el contenido
+            const variables = extractVariables(prompt.content);
+            
+            if (variables.length > 0) {
+                // Mostrar modal de variables
+                openVariablesModal(prompt, variables);
+            } else {
+                // Copiar directo
+                try {
+                    await navigator.clipboard.writeText(prompt.content);
+                    
+                    setSyncStatus('syncing');
+                    await updateDoc(doc(db, 'prompts', id), {
+                        copyCount: (prompt.copyCount || 0) + 1
+                    });
+                    
+                    addToRecent(id);
+                    showToast('Copiado al portapapeles');
+                } catch (error) {
+                    console.error('Error al copiar:', error);
+                    showToast('Error al copiar');
+                }
+            }
+        }
+
+        function extractVariables(content) {
+            const regex = /\{([^}]+)\}/g;
+            const variables = [];
+            let match;
+            
+            while ((match = regex.exec(content)) !== null) {
+                const varName = match[1].trim();
+                if (!variables.includes(varName)) {
+                    variables.push(varName);
+                }
+            }
+            
+            return variables;
+        }
+
+        let currentPromptToCopy = null;
+
+        function openVariablesModal(prompt, variables) {
+            currentPromptToCopy = prompt;
+            variablesContainer.innerHTML = variables.map(varName => `
+                <div class="variable-input">
+                    <label for="var-${varName}">${varName}:</label>
+                    <input type="text" id="var-${varName}" name="${varName}" required 
+                           placeholder="Ingresá el valor para ${varName}">
+                </div>
+            `).join('');
+            
+            variablesModal.classList.add('active');
+            
+            // Focus en el primer input
+            setTimeout(() => {
+                const firstInput = variablesContainer.querySelector('input');
+                if (firstInput) firstInput.focus();
+            }, 100);
+        }
+
+        async function submitVariables(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            let content = currentPromptToCopy.content;
+            
+            // Reemplazar variables
+            for (const [key, value] of formData.entries()) {
+                content = content.replace(new RegExp(`\\{${key}\\}`, 'g'), value);
+            }
+            
+            try {
+                await navigator.clipboard.writeText(content);
+                
+                setSyncStatus('syncing');
+                await updateDoc(doc(db, 'prompts', currentPromptToCopy.id), {
+                    copyCount: (currentPromptToCopy.copyCount || 0) + 1
+                });
+                
+                addToRecent(currentPromptToCopy.id);
+                variablesModal.classList.remove('active');
+                showToast('Copiado al portapapeles');
+            } catch (error) {
+                console.error('Error al copiar:', error);
+                showToast('Error al copiar');
+            }
+        }
+
+        window.duplicatePrompt = async function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            setSyncStatus('syncing');
+            try {
+                await addDoc(collection(db, 'prompts'), {
+                    userId: currentUser.uid,
+                    title: `${prompt.title} (copia)`,
+                    content: prompt.content,
+                    category: prompt.category || '',
+                    tags: prompt.tags || [],
+                    favorite: false,
+                    copyCount: 0,
+                    createdAt: serverTimestamp(),
+                    updatedAt: serverTimestamp()
+                });
+                showToast('Prompt duplicado');
+            } catch (error) {
+                console.error('Error al duplicar:', error);
+                showToast('Error al duplicar');
+                setSyncStatus('error');
+            }
+        }
+
+        window.toggleFavorite = async function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            setSyncStatus('syncing');
+            try {
+                await updateDoc(doc(db, 'prompts', id), {
+                    favorite: !prompt.favorite
+                });
+            } catch (error) {
+                console.error('Error al marcar favorito:', error);
+                showToast('Error al actualizar');
+                setSyncStatus('error');
+            }
+        }
+
+        window.sharePrompt = function(id) {
+            const prompt = prompts.find(p => p.id === id);
+            const encoded = btoa(JSON.stringify({
+                title: prompt.title,
+                content: prompt.content,
+                tags: prompt.tags,
+                category: prompt.category
+            }));
+            
+            const url = `${window.location.origin}${window.location.pathname}?shared=${encoded}`;
+            shareLink.value = url;
+            shareModal.classList.add('active');
+        }
+
+        function copyShareLinkFn() {
+            shareLink.select();
+            document.execCommand('copy');
+            showToast('Link copiado');
+        }
+
+        function openTemplatesModal() {
+            templatesGrid.innerHTML = templates.map(template => `
+                <div class="template-card" onclick="useTemplate('${template.id}')">
+                    <div class="template-icon">${template.icon}</div>
+                    <div class="template-title">${template.title}</div>
+                    <div class="template-desc">${template.description}</div>
+                </div>
+            `).join('');
+            
+            templatesModal.classList.add('active');
+        }
+
+        window.useTemplate = function(templateId) {
+            const template = templates.find(t => t.id === templateId);
+            
+            document.getElementById('promptTitle').value = template.title;
+            document.getElementById('promptContent').value = template.content;
+            document.getElementById('promptCategory').value = template.category;
+            document.getElementById('promptTags').value = template.tags.join(', ');
+            charCounter.textContent = `${template.content.length} caracteres`;
+            
+            templatesModal.classList.remove('active');
+            promptModal.classList.add('active');
+        }
+
+        function exportPrompts() {
+            const dataStr = JSON.stringify(prompts.map(p => ({
+                title: p.title,
+                content: p.content,
+                category: p.category,
+                tags: p.tags,
+                favorite: p.favorite,
+                copyCount: p.copyCount
+            })), null, 2);
+            
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `prompts-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('Prompts exportados');
+        }
+
+        async function importPrompts(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            try {
+                const text = await file.text();
+                const importedPrompts = JSON.parse(text);
+                
+                setSyncStatus('syncing');
+                
+                for (const prompt of importedPrompts) {
+                    await addDoc(collection(db, 'prompts'), {
+                        userId: currentUser.uid,
+                        title: prompt.title,
+                        content: prompt.content,
+                        category: prompt.category || '',
+                        tags: prompt.tags || [],
+                        favorite: prompt.favorite || false,
+                        copyCount: 0,
+                        createdAt: serverTimestamp(),
+                        updatedAt: serverTimestamp()
+                    });
+                }
+                
+                showToast(`${importedPrompts.length} prompts importados`);
+                importFile.value = '';
+            } catch (error) {
+                console.error('Error al importar:', error);
+                showToast('Error al importar prompts');
+                setSyncStatus('error');
+            }
+        }
+
+        function renderPrompts() {
+            const searchTerm = searchInput.value.toLowerCase();
+            let filtered = prompts.filter(p => 
+                p.title.toLowerCase().includes(searchTerm) ||
+                p.content.toLowerCase().includes(searchTerm) ||
+                (p.tags && p.tags.some(t => t.toLowerCase().includes(searchTerm)))
+            );
+
+            // Filter by category
+            if (currentCategoryFilter) {
+                filtered = filtered.filter(p => p.category === currentCategoryFilter);
+            }
+
+            // Filter by favorites
+            if (currentSort === 'favorites') {
+                filtered = filtered.filter(p => p.favorite);
+            }
+
+            // Sort
+            if (currentSort === 'recent') {
+                filtered.sort((a, b) => {
+                    const aTime = a.updatedAt?.seconds || 0;
+                    const bTime = b.updatedAt?.seconds || 0;
+                    return bTime - aTime;
+                });
+            } else if (currentSort === 'used') {
+                filtered.sort((a, b) => (b.copyCount || 0) - (a.copyCount || 0));
+            } else if (currentSort === 'alpha') {
+                filtered.sort((a, b) => a.title.localeCompare(b.title));
+            } else if (currentSort === 'favorites') {
+                filtered.sort((a, b) => {
+                    const aTime = a.updatedAt?.seconds || 0;
+                    const bTime = b.updatedAt?.seconds || 0;
+                    return bTime - aTime;
+                });
+            }
+
+            // Update category filter and dashboard
+            updateCategoryFilter();
+            updateDashboard();
+
+            if (filtered.length === 0) {
+                promptList.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <h3>No hay prompts ${searchTerm ? 'que coincidan con tu búsqueda' : currentSort === 'favorites' ? 'marcados como favoritos' : 'guardados'}</h3>
+                        <p>${searchTerm ? 'Intenta con otra búsqueda' : currentSort === 'favorites' ? 'Marca algunos prompts como favoritos' : 'Crea tu primer prompt para empezar'}</p>
+                    </div>
+                `;
+                return;
+            }
+
+            promptList.innerHTML = filtered.map(prompt => {
+                const highlightedTitle = highlightText(prompt.title, searchTerm);
+                const highlightedContent = highlightText(prompt.content.substring(0, 200), searchTerm);
+                
+                return `
+                <div class="prompt-card" data-prompt-id="${prompt.id}">
+                    <div class="prompt-header">
+                        <h3 class="prompt-title">
+                            <span class="favorite-star" onclick="event.stopPropagation(); toggleFavorite('${prompt.id}')" title="${prompt.favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}">
+                                ${prompt.favorite ? '⭐' : '☆'}
+                            </span>
+                            ${highlightedTitle}
+                            ${prompt.category ? `<span class="tag">${escapeHtml(prompt.category)}</span>` : ''}
+                        </h3>
+                        <div class="prompt-actions">
+                            <button class="icon-btn" onclick="event.stopPropagation(); copyPrompt('${prompt.id}')" title="Copiar">📋</button>
+                            <button class="icon-btn" onclick="event.stopPropagation(); sharePrompt('${prompt.id}')" title="Compartir">🔗</button>
+                            <button class="icon-btn" onclick="event.stopPropagation(); duplicatePrompt('${prompt.id}')" title="Duplicar">📑</button>
+                            <button class="icon-btn" onclick="event.stopPropagation(); openEditModal('${prompt.id}')" title="Editar">✏️</button>
+                            <button class="icon-btn" onclick="event.stopPropagation(); deletePrompt('${prompt.id}')" title="Eliminar">🗑️</button>
+                        </div>
+                    </div>
+                    <div class="prompt-content">${highlightedContent}${prompt.content.length > 200 ? '...' : ''}</div>
+                    ${prompt.tags && prompt.tags.length > 0 ? `
+                        <div class="prompt-tags">
+                            ${prompt.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
+                        </div>
+                    ` : ''}
+                    <div class="prompt-meta">
+                        <span>Copiado ${prompt.copyCount || 0} ${(prompt.copyCount || 0) === 1 ? 'vez' : 'veces'} • ${prompt.content.length} caracteres</span>
+                        <span>${formatDate(prompt.updatedAt)}</span>
+                    </div>
+                </div>
+            `}).join('');
+
+            // Add click handler for compact view expansion
+            if (promptList.classList.contains('compact')) {
+                document.querySelectorAll('.prompt-card').forEach(card => {
+                    card.addEventListener('click', function(e) {
+                        // Don't expand if clicking on action buttons
+                        if (e.target.closest('.prompt-actions') || e.target.closest('.favorite-star')) {
+                            return;
+                        }
+                        this.classList.toggle('expanded');
+                    });
+                });
+            }
+        }
+
+        function highlightText(text, search) {
+            if (!search) return escapeHtml(text);
+            
+            const escapedText = escapeHtml(text);
+            const regex = new RegExp(`(${search})`, 'gi');
+            return escapedText.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function updateDashboard() {
+            document.getElementById('totalPrompts').textContent = prompts.length;
+            
+            const categories = [...new Set(prompts.map(p => p.category).filter(c => c))];
+            document.getElementById('totalCategories').textContent = categories.length;
+            
+            const favorites = prompts.filter(p => p.favorite).length;
+            document.getElementById('totalFavorites').textContent = favorites;
+            
+            const sortedByUse = [...prompts].sort((a, b) => (b.copyCount || 0) - (a.copyCount || 0));
+            const mostUsedPrompt = sortedByUse[0];
+            const mostUsedText = mostUsedPrompt ? mostUsedPrompt.title.substring(0, 15) + (mostUsedPrompt.title.length > 15 ? '...' : '') : '-';
+            document.getElementById('mostUsed').textContent = mostUsedText;
+            document.getElementById('mostUsed').title = mostUsedPrompt ? mostUsedPrompt.title : '';
+            
+            // Recent prompts (últimos 5 copiados)
+            const recentlyUsed = getRecentPrompts();
+            if (recentlyUsed.length > 0) {
+                document.getElementById('recentPromptsSection').style.display = 'block';
+                document.getElementById('recentPromptsList').innerHTML = recentlyUsed.map(id => {
+                    const prompt = prompts.find(p => p.id === id);
+                    if (!prompt) return '';
+                    return `<div class="recent-item" onclick="openEditModal('${id}')">${escapeHtml(prompt.title)}</div>`;
+                }).join('');
+            }
+        }
+
+        function getRecentPrompts() {
+            const recent = JSON.parse(localStorage.getItem('recentPrompts') || '[]');
+            return recent.slice(0, 5);
+        }
+
+        function addToRecent(promptId) {
+            let recent = JSON.parse(localStorage.getItem('recentPrompts') || '[]');
+            recent = recent.filter(id => id !== promptId);
+            recent.unshift(promptId);
+            recent = recent.slice(0, 5);
+            localStorage.setItem('recentPrompts', JSON.stringify(recent));
+        }
+
+        function updateCategoryFilter() {
+            const categories = [...new Set(prompts.map(p => p.category).filter(c => c))].sort();
+            const currentValue = categoryFilter.value;
+            
+            categoryFilter.innerHTML = '<option value="">Todas las categorías</option>' +
+                categories.map(cat => `<option value="${escapeHtml(cat)}">${escapeHtml(cat)}</option>`).join('');
+            
+            if (categories.includes(currentValue)) {
+                categoryFilter.value = currentValue;
+            }
+
+            // Update datalist for autocomplete
+            const datalist = document.getElementById('categoryList');
+            datalist.innerHTML = categories.map(cat => `<option value="${escapeHtml(cat)}">`).join('');
+        }
+
+        function filterPrompts() {
+            renderPrompts();
+        }
+
+        function showToast(message) {
+            toast.textContent = message;
+            toast.classList.add('active');
+            setTimeout(() => {
+                toast.classList.remove('active');
+            }, 2000);
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        function loadTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function formatDate(timestamp) {
+            if (!timestamp || !timestamp.seconds) return 'Recién';
+            
+            const date = new Date(timestamp.seconds * 1000);
+            const now = new Date();
+            const diff = now - date;
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            
+            if (days === 0) return 'Hoy';
+            if (days === 1) return 'Ayer';
+            if (days < 7) return `Hace ${days} días`;
+            
+            return date.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        }
+
+        // Close modal on outside click
+        promptModal.addEventListener('click', function(e) {
+            if (e.target === promptModal) {
+                closeModalFn();
+            }
+        });
+    </script>
 </body>
 </html>

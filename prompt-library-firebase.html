@@ -603,25 +603,254 @@
             }
 
             h1 {
-                font-size: 24px;
+                font-size: 20px;
+            }
+
+            header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+
+            .header-actions {
+                width: 100%;
+                flex-wrap: wrap;
+                justify-content: space-between;
             }
 
             .modal-content {
                 padding: 20px;
+                width: 95%;
             }
 
-            .filters {
+            .filters, .filter-section {
                 gap: 8px;
             }
 
             .filter-btn {
-                font-size: 12px;
+                font-size: 11px;
                 padding: 6px 12px;
             }
 
             .user-info span {
                 display: none;
             }
+
+            .search-bar {
+                flex-direction: column;
+            }
+
+            .btn {
+                font-size: 13px;
+                padding: 8px 16px;
+            }
+
+            .prompt-card {
+                padding: 15px;
+            }
+
+            .prompt-title {
+                font-size: 16px;
+            }
+
+            .prompt-actions {
+                flex-wrap: wrap;
+            }
+
+            .icon-btn {
+                font-size: 16px;
+            }
+
+            .templates-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 10px;
+            }
+
+            .template-card {
+                padding: 15px;
+            }
+
+            .template-icon {
+                font-size: 24px;
+            }
+        }
+
+        .footer {
+            text-align: center;
+            padding: 40px 20px 20px;
+            color: var(--text-secondary);
+            font-size: 13px;
+            border-top: 1px solid var(--border);
+            margin-top: 40px;
+        }
+
+        .view-toggle {
+            display: flex;
+            gap: 5px;
+            background: var(--bg-secondary);
+            padding: 4px;
+            border-radius: 8px;
+        }
+
+        .view-toggle button {
+            padding: 6px 12px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-secondary);
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .prompt-list.compact .prompt-card {
+            padding: 12px 15px;
+        }
+
+        .prompt-list.compact .prompt-content {
+            display: none;
+        }
+
+        .prompt-list.compact .prompt-tags {
+            margin-bottom: 0;
+        }
+
+        .dashboard {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 15px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--accent);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .recent-prompts {
+            margin-top: 15px;
+        }
+
+        .recent-prompts h3 {
+            font-size: 14px;
+            margin-bottom: 10px;
+            color: var(--text-secondary);
+        }
+
+        .recent-item {
+            padding: 8px 12px;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            margin-bottom: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 13px;
+        }
+
+        .recent-item:hover {
+            background: var(--border);
+            transform: translateX(5px);
+        }
+
+        .shortcuts-help {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .shortcuts-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--accent);
+            color: white;
+            border: none;
+            font-size: 18px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .shortcuts-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .shortcuts-panel {
+            position: fixed;
+            bottom: 70px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 99;
+            min-width: 250px;
+        }
+
+        .shortcuts-panel.active {
+            display: block;
+        }
+
+        .shortcuts-panel h3 {
+            font-size: 14px;
+            margin-bottom: 12px;
+            color: var(--text-primary);
+        }
+
+        .shortcut-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            font-size: 13px;
+        }
+
+        .shortcut-key {
+            background: var(--bg-secondary);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 11px;
+            border: 1px solid var(--border);
+        }
+
+        .highlight {
+            background: yellow;
+            color: black;
+            padding: 2px 4px;
+            border-radius: 2px;
         }
     </style>
 </head>
@@ -684,11 +913,68 @@
                             <option value="">Todas las categorías</option>
                         </select>
                     </div>
+                    <div class="view-toggle">
+                        <button class="active" data-view="normal">Normal</button>
+                        <button data-view="compact">Compacta</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard" class="dashboard">
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalPrompts">0</span>
+                        <span class="stat-label">Total Prompts</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalCategories">0</span>
+                        <span class="stat-label">Categorías</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="totalFavorites">0</span>
+                        <span class="stat-label">Favoritos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number" id="mostUsed">-</span>
+                        <span class="stat-label">Más Usado</span>
+                    </div>
+                </div>
+                <div class="recent-prompts" id="recentPromptsSection" style="display: none;">
+                    <h3>📌 Usados recientemente</h3>
+                    <div id="recentPromptsList"></div>
                 </div>
             </div>
 
             <div id="promptList" class="prompt-list">
                 <!-- Prompts se cargan aquí -->
+            </div>
+
+            <div class="footer">
+                Diseñado por sebadetoma by claude, 2026
+            </div>
+        </div>
+    </div>
+
+    <!-- Shortcuts help -->
+    <div class="shortcuts-help" id="shortcutsHelp" style="display: none;">
+        <button class="shortcuts-btn" id="shortcutsBtn" title="Atajos de teclado">⌨️</button>
+        <div class="shortcuts-panel" id="shortcutsPanel">
+            <h3>⌨️ Atajos de Teclado</h3>
+            <div class="shortcut-item">
+                <span>Nuevo prompt</span>
+                <span class="shortcut-key">Ctrl+B</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Plantillas</span>
+                <span class="shortcut-key">Ctrl+P</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Buscar</span>
+                <span class="shortcut-key">Ctrl+F</span>
+            </div>
+            <div class="shortcut-item">
+                <span>Cerrar modal</span>
+                <span class="shortcut-key">Esc</span>
             </div>
         </div>
     </div>
@@ -981,8 +1267,8 @@
 
         // Keyboard shortcuts
         document.addEventListener('keydown', (e) => {
-            // Ctrl/Cmd + N: Nuevo prompt
-            if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+            // Ctrl/Cmd + B: Nuevo prompt
+            if ((e.ctrlKey || e.metaKey) && e.key === 'b') {
                 e.preventDefault();
                 if (appContainer.classList.contains('active')) {
                     openAddModal();
@@ -995,8 +1281,8 @@
                     searchInput.focus();
                 }
             }
-            // Ctrl/Cmd + T: Plantillas
-            if ((e.ctrlKey || e.metaKey) && e.key === 't') {
+            // Ctrl/Cmd + P: Plantillas
+            if ((e.ctrlKey || e.metaKey) && e.key === 'p') {
                 e.preventDefault();
                 if (appContainer.classList.contains('active')) {
                     openTemplatesModal();
@@ -1008,6 +1294,7 @@
                 templatesModal.classList.remove('active');
                 variablesModal.classList.remove('active');
                 shareModal.classList.remove('active');
+                document.getElementById('shortcutsPanel').classList.remove('active');
             }
         });
 
@@ -1049,11 +1336,31 @@
             loginScreen.style.display = 'none';
             loadingScreen.style.display = 'none';
             appContainer.classList.add('active');
+            document.getElementById('shortcutsHelp').style.display = 'block';
             
             userInfo.innerHTML = `
                 <img src="${currentUser.photoURL}" alt="${currentUser.displayName}" class="user-avatar">
                 <span>${currentUser.displayName}</span>
             `;
+
+            // Setup view toggle
+            document.querySelectorAll('.view-toggle button').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.view-toggle button').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    if (this.dataset.view === 'compact') {
+                        promptList.classList.add('compact');
+                    } else {
+                        promptList.classList.remove('compact');
+                    }
+                });
+            });
+
+            // Setup shortcuts button
+            document.getElementById('shortcutsBtn').addEventListener('click', () => {
+                document.getElementById('shortcutsPanel').classList.toggle('active');
+            });
         }
 
         function loadPrompts() {
@@ -1196,6 +1503,7 @@
                         copyCount: (prompt.copyCount || 0) + 1
                     });
                     
+                    addToRecent(id);
                     showToast('Copiado al portapapeles');
                 } catch (error) {
                     console.error('Error al copiar:', error);
@@ -1259,6 +1567,7 @@
                     copyCount: (currentPromptToCopy.copyCount || 0) + 1
                 });
                 
+                addToRecent(currentPromptToCopy.id);
                 variablesModal.classList.remove('active');
                 showToast('Copiado al portapapeles');
             } catch (error) {
@@ -1439,8 +1748,9 @@
                 });
             }
 
-            // Update category filter
+            // Update category filter and dashboard
             updateCategoryFilter();
+            updateDashboard();
 
             if (filtered.length === 0) {
                 promptList.innerHTML = `
@@ -1453,14 +1763,18 @@
                 return;
             }
 
-            promptList.innerHTML = filtered.map(prompt => `
+            promptList.innerHTML = filtered.map(prompt => {
+                const highlightedTitle = highlightText(prompt.title, searchTerm);
+                const highlightedContent = highlightText(prompt.content.substring(0, 200), searchTerm);
+                
+                return `
                 <div class="prompt-card">
                     <div class="prompt-header">
                         <h3 class="prompt-title">
                             <span class="favorite-star" onclick="toggleFavorite('${prompt.id}')" title="${prompt.favorite ? 'Quitar de favoritos' : 'Marcar como favorito'}">
                                 ${prompt.favorite ? '⭐' : '☆'}
                             </span>
-                            ${escapeHtml(prompt.title)}
+                            ${highlightedTitle}
                             ${prompt.category ? `<span class="tag">${escapeHtml(prompt.category)}</span>` : ''}
                         </h3>
                         <div class="prompt-actions">
@@ -1471,7 +1785,7 @@
                             <button class="icon-btn" onclick="deletePrompt('${prompt.id}')" title="Eliminar">🗑️</button>
                         </div>
                     </div>
-                    <div class="prompt-content">${escapeHtml(prompt.content)}</div>
+                    <div class="prompt-content">${highlightedContent}${prompt.content.length > 200 ? '...' : ''}</div>
                     ${prompt.tags && prompt.tags.length > 0 ? `
                         <div class="prompt-tags">
                             ${prompt.tags.map(tag => `<span class="tag">#${escapeHtml(tag)}</span>`).join('')}
@@ -1482,7 +1796,53 @@
                         <span>${formatDate(prompt.updatedAt)}</span>
                     </div>
                 </div>
-            `).join('');
+            `}).join('');
+        }
+
+        function highlightText(text, search) {
+            if (!search) return escapeHtml(text);
+            
+            const escapedText = escapeHtml(text);
+            const regex = new RegExp(`(${search})`, 'gi');
+            return escapedText.replace(regex, '<span class="highlight">$1</span>');
+        }
+
+        function updateDashboard() {
+            document.getElementById('totalPrompts').textContent = prompts.length;
+            
+            const categories = [...new Set(prompts.map(p => p.category).filter(c => c))];
+            document.getElementById('totalCategories').textContent = categories.length;
+            
+            const favorites = prompts.filter(p => p.favorite).length;
+            document.getElementById('totalFavorites').textContent = favorites;
+            
+            const sortedByUse = [...prompts].sort((a, b) => (b.copyCount || 0) - (a.copyCount || 0));
+            const mostUsedPrompt = sortedByUse[0];
+            document.getElementById('mostUsed').textContent = mostUsedPrompt ? mostUsedPrompt.title.substring(0, 20) + (mostUsedPrompt.title.length > 20 ? '...' : '') : '-';
+            
+            // Recent prompts (últimos 5 copiados)
+            const recentlyUsed = getRecentPrompts();
+            if (recentlyUsed.length > 0) {
+                document.getElementById('recentPromptsSection').style.display = 'block';
+                document.getElementById('recentPromptsList').innerHTML = recentlyUsed.map(id => {
+                    const prompt = prompts.find(p => p.id === id);
+                    if (!prompt) return '';
+                    return `<div class="recent-item" onclick="openEditModal('${id}')">${escapeHtml(prompt.title)}</div>`;
+                }).join('');
+            }
+        }
+
+        function getRecentPrompts() {
+            const recent = JSON.parse(localStorage.getItem('recentPrompts') || '[]');
+            return recent.slice(0, 5);
+        }
+
+        function addToRecent(promptId) {
+            let recent = JSON.parse(localStorage.getItem('recentPrompts') || '[]');
+            recent = recent.filter(id => id !== promptId);
+            recent.unshift(promptId);
+            recent = recent.slice(0, 5);
+            localStorage.setItem('recentPrompts', JSON.stringify(recent));
         }
 
         function updateCategoryFilter() {

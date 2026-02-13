@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0066cc">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://sebadetoma-stack.github.io/prompt-library/">
+    <meta property="og:title" content="Prompt Library - Organizá tus prompts de IA">
+    <meta property="og:description" content="Guardá, organizá y sincronizá tus prompts de IA en la nube. Con variables dinámicas, plantillas predefinidas y sincronización automática.">
+    <meta property="og:image" content="https://sebadetoma-stack.github.io/prompt-library/og-image.png">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://sebadetoma-stack.github.io/prompt-library/">
+    <meta property="twitter:title" content="Prompt Library - Organizá tus prompts de IA">
+    <meta property="twitter:description" content="Guardá, organizá y sincronizá tus prompts de IA en la nube. Con variables dinámicas, plantillas predefinidas y sincronización automática.">
+    <meta property="twitter:image" content="https://sebadetoma-stack.github.io/prompt-library/og-image.png">
+
+    <title>Prompt Library - Organizá tus prompts de IA</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #1a1a2e;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+        }
+
+        .logo {
+            font-size: 64px;
+            margin-bottom: 20px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        h1 {
+            font-size: 48px;
+            color: white;
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+
+        .tagline {
+            font-size: 20px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 40px;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: white;
+            color: #667eea;
+            padding: 16px 48px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            text-decoration: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin: 60px 0;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        .feature-title {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a1a2e;
+        }
+
+        .feature-desc {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .demo-section {
+            background: white;
+            border-radius: 20px;
+            padding: 50px;
+            margin: 60px 0;
+            text-align: center;
+        }
+
+        .demo-section h2 {
+            font-size: 36px;
+            margin-bottom: 30px;
+            color: #1a1a2e;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .demo-item {
+            text-align: left;
+        }
+
+        .demo-label {
+            font-size: 14px;
+            color: #667eea;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-value {
+            font-size: 18px;
+            color: #1a1a2e;
+            font-weight: 600;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+            margin: 60px 0;
+            flex-wrap: wrap;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: 800;
+            color: white;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 16px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 14px;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+        }
+
+        .footer-links a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            transition: opacity 0.3s;
+        }
+
+        .footer-links a:hover {
+            opacity: 0.8;
+        }
+
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 36px;
+            }
+
+            .tagline {
+                font-size: 18px;
+            }
+
+            .demo-section {
+                padding: 30px 20px;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+            }
+
+            .stats {
+                gap: 30px;
+            }
+
+            .stat-number {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">📝</div>
+            <h1>Prompt Library</h1>
+            <p class="tagline">Guardá, organizá y sincronizá tus prompts de IA en la nube</p>
+            <a href="prompt-library-firebase.html" class="cta-button">Comenzar Gratis</a>
+        </header>
+
+        <div class="features">
+            <div class="feature-card">
+                <div class="feature-icon">☁️</div>
+                <h3 class="feature-title">Sincronización automática</h3>
+                <p class="feature-desc">Accedé a tus prompts desde cualquier dispositivo. Todo se sincroniza en tiempo real con Firebase.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔧</div>
+                <h3 class="feature-title">Variables dinámicas</h3>
+                <p class="feature-desc">Creá prompts reutilizables con variables. Ejemplo: {texto}, {idioma}, {cantidad} - completás al usar.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📋</div>
+                <h3 class="feature-title">Plantillas predefinidas</h3>
+                <p class="feature-desc">Empezá rápido con plantillas para resumir, traducir, analizar y más. O creá las tuyas.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🏷️</div>
+                <h3 class="feature-title">Organización inteligente</h3>
+                <p class="feature-desc">Categorías, etiquetas, favoritos, búsqueda avanzada. Encontrá lo que necesitás al instante.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">🔗</div>
+                <h3 class="feature-title">Compartir fácil</h3>
+                <p class="feature-desc">Compartí tus mejores prompts con un link. Otros pueden verlos y copiarlos a su biblioteca.</p>
+            </div>
+
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Estadísticas y métricas</h3>
+                <p class="feature-desc">Dashboard con tus prompts más usados, categorías, favoritos y actividad reciente.</p>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-number">⭐</span>
+                <span class="stat-label">100% Gratis</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">⚡</span>
+                <span class="stat-label">Sincronización instantánea</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">🔒</span>
+                <span class="stat-label">Tus datos privados</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-number">📱</span>
+                <span class="stat-label">Mobile-first</span>
+            </div>
+        </div>
+
+        <div class="demo-section">
+            <h2>Funcionalidades</h2>
+            <div class="demo-grid">
+                <div class="demo-item">
+                    <div class="demo-label">✅ Atajos de teclado</div>
+                    <div class="demo-value">Ctrl+B, Ctrl+P, Ctrl+F</div>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-label">✅ Vista compacta</div>
+                    <div class="demo-value">Más prompts en pantalla</div>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-label">✅ Exportar / Importar</div>
+                    <div class="demo-value">Backup en JSON</div>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-label">✅ Duplicar prompts</div>
+                    <div class="demo-value">Copia y edita rápido</div>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-label">✅ Modo oscuro</div>
+                    <div class="demo-value">Mejor para tus ojos</div>
+                </div>
+                <div class="demo-item">
+                    <div class="demo-label">✅ Contador caracteres</div>
+                    <div class="demo-value">Control de longitud</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 60px;">
+                <a href="prompt-library-firebase.html" class="cta-button">Probar ahora - Es gratis</a>
+            </div>
+        </div>
+
+        <footer>
+            <p>Diseñado por sebadetoma by claude, 2026</p>
+            <div class="footer-links">
+                <a href="https://github.com/sebadetoma-stack/prompt-library" target="_blank">GitHub</a>
+                <a href="https://github.com/sebadetoma-stack/prompt-library/blob/main/README.md" target="_blank">Documentación</a>
+                <a href="https://www.linkedin.com/in/sebastiandetoma/" target="_blank">LinkedIn</a>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

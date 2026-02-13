@@ -1378,8 +1378,13 @@
                     
                     if (this.dataset.view === 'compact') {
                         promptList.classList.add('compact');
+                        addCompactClickHandlers();
                     } else {
                         promptList.classList.remove('compact');
+                        // Remove expanded class from all cards
+                        document.querySelectorAll('.prompt-card').forEach(card => {
+                            card.classList.remove('expanded');
+                        });
                     }
                 });
             });
@@ -1838,10 +1843,19 @@
                 </div>
             `}).join('');
 
+            // Add click handlers for compact view
+            addCompactClickHandlers();
+        }
+
+        function addCompactClickHandlers() {
             // Add click handler for compact view expansion
             if (promptList.classList.contains('compact')) {
                 document.querySelectorAll('.prompt-card').forEach(card => {
-                    card.addEventListener('click', function(e) {
+                    // Remove old listeners by cloning
+                    const newCard = card.cloneNode(true);
+                    card.parentNode.replaceChild(newCard, card);
+                    
+                    newCard.addEventListener('click', function(e) {
                         // Don't expand if clicking on buttons or interactive elements
                         if (e.target.closest('.icon-btn') || e.target.classList.contains('favorite-star')) {
                             return;

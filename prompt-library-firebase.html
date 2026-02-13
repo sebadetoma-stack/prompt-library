@@ -1241,7 +1241,8 @@
             
             if (shared) {
                 try {
-                    const promptData = JSON.parse(atob(shared));
+                    const decoded = decodeURIComponent(escape(atob(decodeURIComponent(shared))));
+                    const promptData = JSON.parse(decoded);
                     
                     // Pre-cargar en el formulario
                     document.getElementById('promptTitle').value = promptData.title;
@@ -1641,16 +1642,29 @@
 
         window.sharePrompt = function(id) {
             const prompt = prompts.find(p => p.id === id);
-            const encoded = btoa(JSON.stringify({
-                title: prompt.title,
-                content: prompt.content,
-                tags: prompt.tags,
-                category: prompt.category
-            }));
+            if (!prompt) {
+                showToast('Error: prompt no encontrado');
+                return;
+            }
             
-            const url = `${window.location.origin}${window.location.pathname}?shared=${encoded}`;
-            shareLink.value = url;
-            shareModal.classList.add('active');
+            try {
+                const dataStr = JSON.stringify({
+                    title: prompt.title,
+                    content: prompt.content,
+                    tags: prompt.tags || [],
+                    category: prompt.category || ''
+                });
+                
+                // Usar encodeURIComponent para manejar caracteres especiales
+                const encoded = encodeURIComponent(btoa(unescape(encodeURIComponent(dataStr))));
+                
+                const url = `${window.location.origin}${window.location.pathname}?shared=${encoded}`;
+                shareLink.value = url;
+                shareModal.classList.add('active');
+            } catch (error) {
+                console.error('Error al compartir:', error);
+                showToast('Error al generar link');
+            }
         }
 
         function copyShareLinkFn() {
@@ -1828,8 +1842,8 @@
             if (promptList.classList.contains('compact')) {
                 document.querySelectorAll('.prompt-card').forEach(card => {
                     card.addEventListener('click', function(e) {
-                        // Don't expand if clicking on action buttons
-                        if (e.target.closest('.prompt-actions') || e.target.closest('.favorite-star')) {
+                        // Don't expand if clicking on buttons or interactive elements
+                        if (e.target.closest('.icon-btn') || e.target.classList.contains('favorite-star')) {
                             return;
                         }
                         this.classList.toggle('expanded');

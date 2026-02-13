@@ -7,8 +7,6 @@
 
 Una aplicación web progresiva (PWA) para gestionar tus prompts de IA con sincronización en tiempo real, variables dinámicas y plantillas predefinidas.
 
-![Prompt Library Screenshot](screenshot.png)
-
 ## ✨ Características
 
 ### 🔧 Funcionalidades Core
@@ -194,7 +192,7 @@ MIT License - ver [LICENSE](LICENSE) para más detalles
 ## 👨‍💻 Autor
 
 **Sebastián De Toma**
-- LinkedIn: [@sebastiandetoma](https://www.linkedin.com/in/sebastiandetoma/)
+- LinkedIn: [@juan-sebastian-de-toma](https://www.linkedin.com/in/juan-sebastian-de-toma/)
 - GitHub: [@sebadetoma-stack](https://github.com/sebadetoma-stack)
 - Web: [El Cronista](https://www.cronista.com)
 
